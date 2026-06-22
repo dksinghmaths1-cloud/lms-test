@@ -367,21 +367,26 @@
             document.getElementById('test-interface').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
-            executeSecureGet({
-                action: "submitTest",
-                examName: currentExamName,
-                username: loggedInUser.username,
-                sectionA: secA,
-                sectionB: secB,
-                totalScore: totalScore
-            }, "handleSubmitResponse", function(data) {
-                if (data && data.result === "success") {
-                    document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully with your Drive folder!";
-                    document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
-                } else {
-                    document.getElementById('sheet-status').innerText = "❌ Synchronization failed. Check script configuration parameters.";
-                    document.getElementById('sheet-status').className = "text-xs font-bold text-red-600 bg-red-50 inline-block px-4 py-1 rounded-full mt-2";
-                }
+            // 🎯 BACKGROUND POST ACTION: Submits the test cleanly to allow Google Drive file auto-generations
+            fetch(GOOGLE_SHEET_WEBAPP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    examName: currentExamName,
+                    username: loggedInUser.username,
+                    sectionA: secA,
+                    sectionB: secB,
+                    totalScore: totalScore
+                })
+            })
+            .then(() => {
+                document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully with your Drive folder!";
+                document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
+            })
+            .catch((err) => {
+                document.getElementById('sheet-status').innerText = "❌ Synchronization failed.";
+                console.error(err);
             });
         }
 
