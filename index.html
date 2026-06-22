@@ -337,9 +337,10 @@
         function nextQuestion() { if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1); }
         function confirmSubmit() { if (confirm("Are you sure you want to finalize this test?")) evaluateAndDisplayResults(); }
 
-        function evaluateAndDisplayResults() {
+                function evaluateAndDisplayResults() {
             clearInterval(timerInterval);
             let totalScore = 0, secA = 0, secB = 0, correct = 0, incorrect = 0;
+            
             questions.forEach((q, idx) => {
                 const response = userResponses[idx]; let questionMarks = 0;
                 if (response !== undefined && response !== "") {
@@ -351,6 +352,32 @@
                 }
                 totalScore += questionMarks; if (q.type === "mcq") secA += questionMarks; else secB += questionMarks;
             });
+
+            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('final-correct').innerText = correct;
+            document.getElementById('final-incorrect').innerText = incorrect;
+            document.getElementById('test-interface').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // 🚀 Bypasses Google's background POST blocks by pushing submissions through the clean script channel
+            executeSecureGet({
+                action: "submitTest",
+                examName: currentExamName,
+                username: loggedInUser.username,
+                sectionA: secA,
+                sectionB: secB,
+                totalScore: totalScore
+            }, "handleSubmitResponse", function(data) {
+                if (data && data.result === "success") {
+                    document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully with your Drive folder!";
+                    document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
+                } else {
+                    document.getElementById('sheet-status').innerText = "❌ Synchronization failed. Check script configuration parameters.";
+                    document.getElementById('sheet-status').className = "text-xs font-bold text-red-600 bg-red-50 inline-block px-4 py-1 rounded-full mt-2";
+                }
+            });
+        }
+
 
             document.getElementById('final-score').innerText = totalScore;
             document.getElementById('final-correct').innerText = correct;
