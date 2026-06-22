@@ -143,14 +143,15 @@
     </div>
 
     <script>
-        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx3EEjP0Ge-5Sk9ac1p2ZAcHUDhgR1bnRmj3S1PlwGt5OY6NgYKrZz_M9eHKMS1otbQ/exec";
+        // Your newly updated backend Web App link
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
         
         const questions = [
             { id: 1, type: "mcq", text: String.raw`Evaluate the fundamental core derivative boundary limit: $\lim_{x \to 0} \frac{\sin x}{x} =$`, options: ["0", "1", "$\infty$", "Undefined"], correct: 1 },
             { id: 2, type: "numeric", text: String.raw`If $\log_{10}(x) = 2$, determine the target scalar absolute integer metric value of $x$:`, correct: "100" }
         ];
 
-        let currentGatewayMode = "login"; // Modes: "login" or "signup"
+        let currentGatewayMode = "login"; 
         let loggedInUser = null; let currentExamName = ""; let currentIdx = 0; let userResponses = {}; let timeRemaining = 75 * 60; let timerInterval;
 
         function setupKaTeX() {
@@ -168,7 +169,6 @@
         }
 
         function toggleGatewayMode() {
-            // Clears any leftover alerts on flip view toggle channels
             document.getElementById('gateway-error').classList.add('hidden');
             document.getElementById('gateway-success').classList.add('hidden');
             
@@ -195,7 +195,7 @@
             document.getElementById('gateway-error').classList.add('hidden');
             document.getElementById('gateway-success').classList.add('hidden');
 
-            if (!user || !pass) return;
+            if (!user || !pass) { alert("Please complete Username and Password fields."); return; }
 
             if (currentGatewayMode === "login") {
                 document.getElementById('gate-submit-btn').innerText = "Verifying Profile...";
@@ -213,28 +213,34 @@
                     }
                 });
             } else {
-                // RUN SIGN UP ACCOUNT APPENDBACK DISPATCH PIPES
                 const name = document.getElementById('gate-name').value.trim();
                 const mobile = document.getElementById('gate-mobile').value.trim();
                 if (!name || !mobile) { alert("Please complete Name and Mobile inputs."); return; }
 
                 document.getElementById('gate-submit-btn').innerText = "Creating Account Matrix...";
                 
-                const payload = { purpose: "signup", username: user, password: pass, name: name, mobile: mobile };
-                
-                fetch(GOOGLE_SHEET_WEBAPP_URL, {
-                    method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                })
-                .then(() => {
-                    // Because no-cors masks results, we prompt validation check confirmation alerts
+                executeSecureGet({ 
+                    action: "signup", 
+                    username: user, 
+                    password: pass, 
+                    name: name, 
+                    mobile: mobile 
+                }, "handleSignup", function(data) {
                     document.getElementById('gate-submit-btn').innerText = "Register New Account";
-                    document.getElementById('gateway-success').innerText = "✅ Account created successfully! Switch to log in view to access assignments.";
-                    document.getElementById('gateway-success').classList.remove('hidden');
-                    // Reset registration values
-                    document.getElementById('gate-name').value = ""; document.getElementById('gate-mobile').value = "";
-                    document.getElementById('gate-username').value = ""; document.getElementById('gate-password').value = "";
-                    toggleGatewayMode();
+                    
+                    if (data && data.result === "exists") {
+                        document.getElementById('gateway-error').innerText = "❌ Username is already taken! Try another one.";
+                        document.getElementById('gateway-error').classList.remove('hidden');
+                    } else if (data && data.result === "success") {
+                        document.getElementById('gateway-success').innerText = "✅ Account created successfully! Log in to access assignments.";
+                        document.getElementById('gateway-success').classList.remove('hidden');
+                        
+                        document.getElementById('gate-name').value = ""; document.getElementById('gate-mobile').value = "";
+                        document.getElementById('gate-username').value = ""; document.getElementById('gate-password').value = "";
+                        toggleGatewayMode();
+                    } else {
+                        alert("Registration error. Check web app parameters.");
+                    }
                 });
             }
         }
@@ -286,7 +292,7 @@
             timerInterval = setInterval(() => {
                 if (timeRemaining <= 0) { evaluateAndDisplayResults(); } else {
                     timeRemaining--;
-                    document.getElementById('timer').innerText = `${Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
+                    document.getElementById('timer').innerText = `${Math.var = Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
                 }
             }, 1000);
         }
