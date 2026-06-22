@@ -196,14 +196,20 @@
             });
         }
 
-        function loadPerformanceHistory() {
+                function loadPerformanceHistory() {
             const tableBox = document.getElementById('history-rows-box');
             tableBox.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400">Loading secure scores matrix...</td></tr>`;
 
             executeSecureGet({ action: "getHistory", username: loggedInUser.username }, "handleHistory", function(data) {
+                // Keep track of which exams have already been submitted
+                let completedExams = new Set();
+
                 if(data && data.status === "success" && data.history.length > 0) {
                     tableBox.innerHTML = "";
                     data.history.forEach(row => {
+                        // Normalize the name to match the assignment buttons (e.g. "Mock Test 1")
+                        completedExams.add(row.examName.trim().toLowerCase());
+
                         const tr = document.createElement('tr');
                         tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
                         tr.innerHTML = `<td class="py-3.5 font-bold text-gray-900">${row.examName}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionA}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionB}</td><td class="py-3.5 text-center text-emerald-600 font-extrabold">${row.total}</td>`;
@@ -212,8 +218,50 @@
                 } else {
                     tableBox.innerHTML = `<tr><td colspan="4" class="py-5 text-center text-gray-400 font-normal">No past performance submissions found. Ready for first mock evaluation!</td></tr>`;
                 }
+
+                // 🔥 LOCK EXAM ATTEMPTS: Update the active assignments panel based on submission history
+                updateExamActionButtons(completedExams);
             });
         }
+
+        function updateExamActionButtons(completedExams) {
+            const examsBox = document.getElementById('active-exams-box');
+            
+            // Define your active exams here (We can later pull this from the sheet too)
+            const availableExams = [
+                { name: "Mock Test 1", duration: "75 Minutes | Math Matrix" }
+            ];
+
+            examsBox.innerHTML = "";
+            availableExams.forEach(exam => {
+                const examKey = exam.name.trim().toLowerCase();
+                let actionHTML = "";
+
+                if (completedExams.has(examKey)) {
+                    // If username exists in that test sheet, lock the button permanently
+                    actionHTML = `
+                        <div class="w-full bg-gray-100 text-gray-400 font-bold py-2 rounded-lg text-sm text-center border border-gray-200 select-none">
+                            🔒 Attempt Submitted
+                        </div>`;
+                } else {
+                    // Otherwise, allow them to click and start the test
+                    actionHTML = `
+                        <button onclick="launchExam('${exam.name}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition cursor-pointer shadow-xs text-center">
+                            Start Assignment
+                        </button>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = "p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex flex-col gap-2";
+                card.innerHTML = `
+                    <div class="font-bold text-gray-900 text-base">${exam.name}</div>
+                    <div class="text-xs text-gray-500 font-medium">Duration: ${exam.duration}</div>
+                    ${actionHTML}
+                `;
+                examsBox.appendChild(card);
+            });
+        }
+
 
         function launchExam(examName) {
             currentExamName = examName;
