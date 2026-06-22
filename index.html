@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.K. Singh Classes - Smart LMS Student Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="setupKaTeX();"></script>
+    <style>
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800" oncontextmenu="return false;">
+
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 px-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-100">
+            <h1 class="text-2xl font-black text-gray-900 tracking-tight">D.K. SINGH CLASSES</h1>
+            <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-1">🎯 Personalized Learning Portal</p>
+            
+            <div id="login-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium">
+                ❌ Invalid Username or Password.
+            </div>
+
+            <div class="mt-6 space-y-3.5">
+                <div>
+                    <label class="block text-left text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Student Username:</label>
+                    <input type="text" id="login-username" placeholder="e.g. student1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+                </div>
+                <div>
+                    <label class="block text-left text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Account Password:</label>
+                    <input type="password" id="login-password" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+            </div>
+            
+            <button onclick="processLogin()" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl mt-6 transition shadow-md cursor-pointer flex justify-center items-center gap-2">
+                Secure Log In
+            </button>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="hidden min-h-screen flex flex-col">
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+            <div>
+                <h1 class="text-xl font-black text-gray-900 tracking-tight">STUDENT PANEL</h1>
+                <p class="text-sm text-gray-500 font-medium">Welcome, <span id="user-display-name" class="text-indigo-600 font-bold">Student</span></p>
+            </div>
+            <button onclick="processLogout()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded-xl border border-gray-200 transition text-sm cursor-pointer">
+                Log Out
+            </button>
+        </header>
+
+        <main class="flex-1 p-6 max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1 bg-white border border-gray-200 rounded-2xl p-5 shadow-xs h-fit">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📝 Active Assignments</h3>
+                <div id="active-exams-box" class="space-y-3">
+                    <div class="p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex flex-col gap-2">
+                        <div class="font-bold text-gray-900 text-base">Mock Test 1</div>
+                        <div class="text-xs text-gray-500 font-medium">Duration: 75 Minutes | Math Matrix</div>
+                        <button onclick="launchExam('Mock Test 1')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition cursor-pointer shadow-xs text-center">
+                            Start Assignment
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 bg-white border border-gray-200 rounded-2xl p-5 shadow-xs">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📊 Past Performance Report Card</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                <th class="pb-3 font-semibold">Exam Title</th>
+                                <th class="pb-3 font-semibold text-center">Sec. A</th>
+                                <th class="pb-3 font-semibold text-center">Sec. B</th>
+                                <th class="pb-3 font-semibold text-center">Total Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-rows-box" class="divide-y divide-gray-100 text-sm font-medium text-gray-700">
+                            <tr>
+                                <td colspan="4" class="py-4 text-center text-gray-400 font-normal">Loading secure scores matrix...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="test-interface" class="hidden min-h-screen flex flex-col bg-gray-50">
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-sm">
+            <div>
+                <h1 class="text-xl font-bold text-gray-900" id="current-test-title">EXAM PORTAL</h1>
+                <p class="text-sm text-gray-500 font-medium">Active Session Profile: <span id="test-display-user" class="text-gray-800 font-semibold"></span></p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-red-50 border border-red-200 px-4 py-2 rounded-lg text-center">
+                    <span id="timer" class="text-xl font-mono font-bold text-red-600">75:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md cursor-pointer">Submit Test</button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col md:flex-row">
+            <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
+                <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
+                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section 1</h2>
+                    <p id="section-marking" class="text-xs text-indigo-700 mt-0.5">Marking Scheme: +4 / -1</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-xl p-6 min-h-[300px] flex flex-col justify-between shadow-xs">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                            <span id="question-number-tag" class="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded-full">Question 1</span>
+                        </div>
+                        <div id="question-text" class="text-lg leading-relaxed mb-6 font-medium text-gray-900"></div>
+                        <div id="options-container" class="space-y-3"></div>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-6 mt-8">
+                        <button onclick="prevQuestion()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-5 rounded-lg border border-gray-200 cursor-pointer">Previous</button>
+                        <button onclick="clearResponse()" class="text-sm text-gray-500 hover:text-red-600 font-semibold cursor-pointer">Clear Response</button>
+                        <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg shadow-xs cursor-pointer">Next</button>
+                    </div>
+                </div>
+            </main>
+            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 sticky top-[80px] h-[calc(100vh-80px)]">
+                <h3 class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-4">Question Palette</h3>
+                <div class="grid grid-cols-5 gap-2.5" id="palette-grid"></div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden min-h-screen bg-gray-100 px-4 py-12 flex flex-col items-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full text-center border border-gray-200 mb-8">
+            <h2 class="text-3xl font-extrabold text-green-600">Test Submitted Successfully!</h2>
+            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Syncing scores with isolated spreadsheet archive...</p>
+            <div class="grid grid-cols-3 gap-4 my-8">
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100"><span class="text-2xl font-black text-indigo-700" id="final-score">0</span><span class="block text-xs text-indigo-600 font-bold mt-1 uppercase">Total Score</span></div>
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100"><span class="text-2xl font-black text-emerald-700" id="final-correct">0</span><span class="block text-xs text-green-600 font-bold mt-1 uppercase">Correct</span></div>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100"><span class="text-2xl font-black text-red-700" id="final-incorrect">0</span><span class="block text-xs text-red-600 font-bold mt-1 uppercase">Incorrect</span></div>
+            </div>
+            <button onclick="returnToDashboard()" class="mt-6 bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-lg shadow-md cursor-pointer">Return to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // Paste your generated server script URL here
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx_Zsa3ghNea_EXEtqmsk2ax8cRXv3TV6k39mrnBtMFJhZzVlgrAHVv27GUgRSdmhEe/exec";
+        
+        // Mock question setup array inside sandbox for quick debugging loop evaluation
+        const questions = [
+            { id: 1, type: "mcq", text: String.raw`Evaluate the fundamental core derivative boundary limit: $\lim_{x \to 0} \frac{\sin x}{x} =$`, options: ["0", "1", "$\infty$", "Undefined"], correct: 1 },
+            { id: 2, type: "numeric", text: String.raw`If $\log_{10}(x) = 2$, determine the target scalar absolute integer metric value of $x$:`, correct: "100" }
+        ];
+
+        let loggedInUser = null; let currentExamName = ""; let currentIdx = 0; let userResponses = {}; let timeRemaining = 75 * 60; let timerInterval;
+
+        function setupKaTeX() {
+            if (typeof renderMathInElement === "function") {
+                renderMathInElement(document.body, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}], throwOnError: false });
+            }
+        }
+
+        // 🔐 REQUEST CONTROLLERS: EXECUTES SECURE LOOKUPS BYPASSING CORS BARS VIA DYNAMIC SCRIPT TAGS
+        function executeSecureGet(params, callbackName, callbackFn) {
+            const script = document.createElement('script');
+            window[callbackName] = function(data) {
+                callbackFn(data);
+                script.remove();
+                delete window[callbackName];
+            };
+            let queryString = Object.keys(params).map(key => key + '=' + encodeURIComponent(params[key])).join('&');
+            script.src = GOOGLE_SHEET_WEBAPP_URL + "?" + queryString + "&callback=" + callbackName + "&ts=" + new Date().getTime();
+            document.body.appendChild(script);
+        }
+
+        function processLogin() {
+            const user = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            if(!user || !pass) return;
+
+            document.getElementById('login-btn').innerText = "Verifying Credentials...";
+            document.getElementById('login-error').classList.add('hidden');
+
+            executeSecureGet({ action: "login", username: user, password: pass }, "handleLogin", function(data) {
+                document.getElementById('login-btn').innerText = "Secure Log In";
+                if(data && data.status === "success") {
+                    loggedInUser = { username: user, name: data.user.name };
+                    document.getElementById('user-display-name').innerText = data.user.name;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard-screen').classList.remove('hidden');
+                    loadPerformanceHistory();
+                } else {
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            });
+        }
+
+        function loadPerformanceHistory() {
+            const tableBox = document.getElementById('history-rows-box');
+            tableBox.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400">Loading secure scores matrix...</td></tr>`;
+
+            executeSecureGet({ action: "getHistory", username: loggedInUser.username }, "handleHistory", function(data) {
+                if(data && data.status === "success" && data.history.length > 0) {
+                    tableBox.innerHTML = "";
+                    data.history.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
+                        tr.innerHTML = `<td class="py-3.5 font-bold text-gray-900">${row.examName}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionA}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionB}</td><td class="py-3.5 text-center text-emerald-600 font-extrabold">${row.total}</td>`;
+                        tableBox.appendChild(tr);
+                    });
+                } else {
+                    tableBox.innerHTML = `<tr><td colspan="4" class="py-5 text-center text-gray-400 font-normal">No past performance submissions found. Ready for first mock evaluation!</td></tr>`;
+                }
+            });
+        }
+
+        function launchExam(examName) {
+            currentExamName = examName;
+            userResponses = {}; timeRemaining = 75 * 60;
+            document.getElementById('current-test-title').innerText = examName.toUpperCase();
+            document.getElementById('test-display-user').innerText = `${loggedInUser.name} (${loggedInUser.username})`;
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('test-interface').classList.remove('hidden');
+            buildPalette(); loadQuestion(0);
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) { evaluateAndDisplayResults(); } else {
+                    timeRemaining--;
+                    document.getElementById('timer').innerText = `${Math.floor(timeRemaining / 60).toString().padStart(2, '0')}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function buildPalette() {
+            const grid = document.getElementById('palette-grid'); grid.innerHTML = "";
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button'); btn.id = `palette-btn-${idx}`;
+                btn.className = "border border-gray-300 font-bold py-2 rounded text-sm text-center text-gray-700 bg-white cursor-pointer";
+                btn.innerText = q.id; btn.onclick = () => loadQuestion(idx); grid.appendChild(btn);
+            });
+        }
+
+        function loadQuestion(idx) {
+            currentIdx = idx; const q = questions[idx];
+            questions.forEach((_, i) => {
+                document.getElementById('palette-btn-' + i).className = userResponses[i] !== undefined && userResponses[i] !== "" ? "border font-bold py-2 rounded text-sm text-center bg-indigo-600 border-indigo-600 text-white cursor-pointer" : "border font-bold py-2 rounded text-sm text-center bg-white border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer";
+            });
+            document.getElementById('palette-btn-' + idx).classList.add('ring-2', 'ring-offset-2', 'ring-indigo-500');
+            document.getElementById('section-title').innerText = q.type === "mcq" ? "Section 1: Single Correct Choice Type" : "Section 2: Integral / Numerical Answer Type";
+            document.getElementById('question-number-tag').innerText = `Question ${q.id} of ${questions.length}`;
+            document.getElementById('question-text').innerText = q.text;
+            const optBox = document.getElementById('options-container'); optBox.innerHTML = "";
+
+            if (q.type === "mcq") {
+                const labels = ["(A)", "(B)", "(C)", "(D)"];
+                q.options.forEach((opt, oIdx) => {
+                    const div = document.createElement('div');
+                    div.className = `flex items-center p-3 border rounded-xl cursor-pointer hover:bg-gray-50 ${userResponses[idx] === oIdx ? 'border-indigo-600 bg-indigo-50/50' : 'border-gray-200'}`;
+                    div.onclick = () => { userResponses[idx] = oIdx; loadQuestion(idx); };
+                    div.innerHTML = `<input type="radio" class="h-4 w-4 text-indigo-600" ${userResponses[idx] === oIdx ? 'checked' : ''}><span class="ml-3 font-semibold text-gray-700 mr-2">${labels[oIdx]}</span><span class="text-gray-900 font-medium">${opt}</span>`;
+                    optBox.appendChild(div);
+                });
+            } else {
+                optBox.innerHTML = `<input type="text" id="num-input" value="${userResponses[idx] || ''}" oninput="userResponses[${idx}]=this.value.trim()" class="w-48 px-4 py-3 border-2 border-gray-300 rounded-xl font-mono text-xl" placeholder="e.g. 5">`;
+            }
+            setupKaTeX();
+        }
+
+        function clearResponse() { delete userResponses[currentIdx]; loadQuestion(currentIdx); }
+        function prevQuestion() { if (currentIdx > 0) loadQuestion(currentIdx - 1); }
+        function nextQuestion() { if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1); }
+        function confirmSubmit() { if (confirm("Are you sure you want to finalize and submit this exam assignment?")) evaluateAndDisplayResults(); }
+
+        function evaluateAndDisplayResults() {
+            clearInterval(timerInterval);
+            let totalScore = 0, secA = 0, secB = 0, correct = 0, incorrect = 0;
+
+            questions.forEach((q, idx) => {
+                const response = userResponses[idx]; let questionMarks = 0;
+                if (response !== undefined && response !== "") {
+                    if (q.type === "mcq") {
+                        if (parseInt(response) === q.correct) { questionMarks = 4; correct++; } else { questionMarks = -1; incorrect++; }
+                    } else {
+                        if (response.toString().toLowerCase() === q.correct.toString().toLowerCase()) { questionMarks = 4; correct++; } else { questionMarks = -1; incorrect++; }
+                    }
+                }
+                totalScore += questionMarks; if (q.type === "mcq") secA += questionMarks; else secB += questionMarks;
+            });
+
+            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('final-correct').innerText = correct;
+            document.getElementById('final-incorrect').innerText = incorrect;
+            document.getElementById('test-interface').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // 📊 POOL SCORE RECORD DIRECTLY TO Live Isolated standalone sheet via Server postData pipes
+            fetch(GOOGLE_SHEET_WEBAPP_URL, {
+                method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ examName: currentExamName, username: loggedInUser.username, sectionA: secA, sectionB: secB, totalScore: totalScore })
+            })
+            .then(() => {
+                document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully with remote spreadsheet file!";
+                document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
+            });
+        }
+
+        function returnToDashboard() {
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.remove('hidden');
+            loadPerformanceHistory();
+        }
+
+        function processLogout() {
+            loggedInUser = null;
+            document.getElementById('login-username').value = ""; document.getElementById('login-password').value = "";
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
