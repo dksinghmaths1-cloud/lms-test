@@ -14,29 +14,42 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800" oncontextmenu="return false;">
 
-    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 px-4">
+    <div id="gateway-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 px-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-100">
             <h1 class="text-2xl font-black text-gray-900 tracking-tight">D.K. SINGH CLASSES</h1>
             <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-1">🎯 Personalized Learning Portal</p>
             
-            <div id="login-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium">
-                ❌ Invalid Username or Password.
-            </div>
+            <div id="gateway-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium"></div>
+            <div id="gateway-success" class="hidden mt-4 p-3 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl font-medium"></div>
 
-            <div class="mt-6 space-y-3.5">
+            <div class="mt-6 space-y-3.5 text-left">
+                <div id="signup-name-box" class="hidden">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Candidate Name:</label>
+                    <input type="text" id="gate-name" placeholder="e.g. Amit Kumar" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+                </div>
+                <div id="signup-mobile-box" class="hidden">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Mobile Number:</label>
+                    <input type="tel" id="gate-mobile" placeholder="e.g. 9876543210" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+                </div>
+
                 <div>
-                    <label class="block text-left text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Student Username:</label>
-                    <input type="text" id="login-username" placeholder="e.g. student1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Choose Username:</label>
+                    <input type="text" id="gate-username" placeholder="e.g. student1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
                 </div>
                 <div>
-                    <label class="block text-left text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Account Password:</label>
-                    <input type="password" id="login-password" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password:</label>
+                    <input type="password" id="gate-password" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
             </div>
             
-            <button onclick="processLogin()" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl mt-6 transition shadow-md cursor-pointer flex justify-center items-center gap-2">
+            <button onclick="handleGatewayAction()" id="gate-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl mt-6 transition shadow-md cursor-pointer text-center">
                 Secure Log In
             </button>
+
+            <p class="mt-5 text-sm text-gray-500 font-medium">
+                <span id="toggle-prompt-text">Don't have an account?</span> 
+                <button onclick="toggleGatewayMode()" id="toggle-action-link" class="text-indigo-600 font-bold hover:underline cursor-pointer ml-1">Create Account</button>
+            </p>
         </div>
     </div>
 
@@ -54,17 +67,8 @@
         <main class="flex-1 p-6 max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-1 bg-white border border-gray-200 rounded-2xl p-5 shadow-xs h-fit">
                 <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📝 Active Assignments</h3>
-                <div id="active-exams-box" class="space-y-3">
-                    <div class="p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex flex-col gap-2">
-                        <div class="font-bold text-gray-900 text-base">Mock Test 1</div>
-                        <div class="text-xs text-gray-500 font-medium">Duration: 75 Minutes | Math Matrix</div>
-                        <button onclick="launchExam('Mock Test 1')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition cursor-pointer shadow-xs text-center">
-                            Start Assignment
-                        </button>
-                    </div>
-                </div>
+                <div id="active-exams-box" class="space-y-3"></div>
             </div>
-
             <div class="md:col-span-2 bg-white border border-gray-200 rounded-2xl p-5 shadow-xs">
                 <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📊 Past Performance Report Card</h3>
                 <div class="overflow-x-auto">
@@ -77,11 +81,7 @@
                                 <th class="pb-3 font-semibold text-center">Total Score</th>
                             </tr>
                         </thead>
-                        <tbody id="history-rows-box" class="divide-y divide-gray-100 text-sm font-medium text-gray-700">
-                            <tr>
-                                <td colspan="4" class="py-4 text-center text-gray-400 font-normal">Loading secure scores matrix...</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="history-rows-box" class="divide-y divide-gray-100 text-sm font-medium text-gray-700"></tbody>
                     </table>
                 </div>
             </div>
@@ -101,7 +101,6 @@
                 <button onclick="confirmSubmit()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md cursor-pointer">Submit Test</button>
             </div>
         </header>
-
         <div class="flex-1 flex flex-col md:flex-row">
             <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
                 <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
@@ -133,7 +132,7 @@
     <div id="result-screen" class="hidden min-h-screen bg-gray-100 px-4 py-12 flex flex-col items-center">
         <div class="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full text-center border border-gray-200 mb-8">
             <h2 class="text-3xl font-extrabold text-green-600">Test Submitted Successfully!</h2>
-            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Syncing scores with isolated spreadsheet archive...</p>
+            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Saving metrics data...</p>
             <div class="grid grid-cols-3 gap-4 my-8">
                 <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100"><span class="text-2xl font-black text-indigo-700" id="final-score">0</span><span class="block text-xs text-indigo-600 font-bold mt-1 uppercase">Total Score</span></div>
                 <div class="bg-green-50 p-4 rounded-xl border border-green-100"><span class="text-2xl font-black text-emerald-700" id="final-correct">0</span><span class="block text-xs text-green-600 font-bold mt-1 uppercase">Correct</span></div>
@@ -144,15 +143,14 @@
     </div>
 
     <script>
-        // Paste your generated server script URL here
-        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx_Zsa3ghNea_EXEtqmsk2ax8cRXv3TV6k39mrnBtMFJhZzVlgrAHVv27GUgRSdmhEe/exec";
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzRwjTjSyMonfrbUrHsGkhFnBMB0VgPM7-VhSVVC7y7ukLcPdApt50kdL5R6bUExkgf/exec";
         
-        // Mock question setup array inside sandbox for quick debugging loop evaluation
         const questions = [
             { id: 1, type: "mcq", text: String.raw`Evaluate the fundamental core derivative boundary limit: $\lim_{x \to 0} \frac{\sin x}{x} =$`, options: ["0", "1", "$\infty$", "Undefined"], correct: 1 },
             { id: 2, type: "numeric", text: String.raw`If $\log_{10}(x) = 2$, determine the target scalar absolute integer metric value of $x$:`, correct: "100" }
         ];
 
+        let currentGatewayMode = "login"; // Modes: "login" or "signup"
         let loggedInUser = null; let currentExamName = ""; let currentIdx = 0; let userResponses = {}; let timeRemaining = 75 * 60; let timerInterval;
 
         function setupKaTeX() {
@@ -161,55 +159,96 @@
             }
         }
 
-        // 🔐 REQUEST CONTROLLERS: EXECUTES SECURE LOOKUPS BYPASSING CORS BARS VIA DYNAMIC SCRIPT TAGS
         function executeSecureGet(params, callbackName, callbackFn) {
             const script = document.createElement('script');
-            window[callbackName] = function(data) {
-                callbackFn(data);
-                script.remove();
-                delete window[callbackName];
-            };
+            window[callbackName] = function(data) { callbackFn(data); script.remove(); delete window[callbackName]; };
             let queryString = Object.keys(params).map(key => key + '=' + encodeURIComponent(params[key])).join('&');
             script.src = GOOGLE_SHEET_WEBAPP_URL + "?" + queryString + "&callback=" + callbackName + "&ts=" + new Date().getTime();
             document.body.appendChild(script);
         }
 
-        function processLogin() {
-            const user = document.getElementById('login-username').value.trim();
-            const pass = document.getElementById('login-password').value.trim();
-            if(!user || !pass) return;
-
-            document.getElementById('login-btn').innerText = "Verifying Credentials...";
-            document.getElementById('login-error').classList.add('hidden');
-
-            executeSecureGet({ action: "login", username: user, password: pass }, "handleLogin", function(data) {
-                document.getElementById('login-btn').innerText = "Secure Log In";
-                if(data && data.status === "success") {
-                    loggedInUser = { username: user, name: data.user.name };
-                    document.getElementById('user-display-name').innerText = data.user.name;
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('dashboard-screen').classList.remove('hidden');
-                    loadPerformanceHistory();
-                } else {
-                    document.getElementById('login-error').classList.remove('hidden');
-                }
-            });
+        function toggleGatewayMode() {
+            // Clears any leftover alerts on flip view toggle channels
+            document.getElementById('gateway-error').classList.add('hidden');
+            document.getElementById('gateway-success').classList.add('hidden');
+            
+            if (currentGatewayMode === "login") {
+                currentGatewayMode = "signup";
+                document.getElementById('signup-name-box').classList.remove('hidden');
+                document.getElementById('signup-mobile-box').classList.remove('hidden');
+                document.getElementById('gate-submit-btn').innerText = "Register New Account";
+                document.getElementById('toggle-prompt-text').innerText = "Already registered?";
+                document.getElementById('toggle-action-link').innerText = "Log In Here";
+            } else {
+                currentGatewayMode = "login";
+                document.getElementById('signup-name-box').classList.add('hidden');
+                document.getElementById('signup-mobile-box').classList.add('hidden');
+                document.getElementById('gate-submit-btn').innerText = "Secure Log In";
+                document.getElementById('toggle-prompt-text').innerText = "Don't have an account?";
+                document.getElementById('toggle-action-link').innerText = "Create Account";
+            }
         }
 
-                function loadPerformanceHistory() {
+        function handleGatewayAction() {
+            const user = document.getElementById('gate-username').value.trim();
+            const pass = document.getElementById('gate-password').value.trim();
+            document.getElementById('gateway-error').classList.add('hidden');
+            document.getElementById('gateway-success').classList.add('hidden');
+
+            if (!user || !pass) return;
+
+            if (currentGatewayMode === "login") {
+                document.getElementById('gate-submit-btn').innerText = "Verifying Profile...";
+                executeSecureGet({ action: "login", username: user, password: pass }, "handleLogin", function(data) {
+                    document.getElementById('gate-submit-btn').innerText = "Secure Log In";
+                    if(data && data.status === "success") {
+                        loggedInUser = { username: user, name: data.user.name };
+                        document.getElementById('user-display-name').innerText = data.user.name;
+                        document.getElementById('gateway-screen').classList.add('hidden');
+                        document.getElementById('dashboard-screen').classList.remove('hidden');
+                        loadPerformanceHistory();
+                    } else {
+                        document.getElementById('gateway-error').innerText = "❌ Invalid Username or Password Match.";
+                        document.getElementById('gateway-error').classList.remove('hidden');
+                    }
+                });
+            } else {
+                // RUN SIGN UP ACCOUNT APPENDBACK DISPATCH PIPES
+                const name = document.getElementById('gate-name').value.trim();
+                const mobile = document.getElementById('gate-mobile').value.trim();
+                if (!name || !mobile) { alert("Please complete Name and Mobile inputs."); return; }
+
+                document.getElementById('gate-submit-btn').innerText = "Creating Account Matrix...";
+                
+                const payload = { purpose: "signup", username: user, password: pass, name: name, mobile: mobile };
+                
+                fetch(GOOGLE_SHEET_WEBAPP_URL, {
+                    method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    // Because no-cors masks results, we prompt validation check confirmation alerts
+                    document.getElementById('gate-submit-btn').innerText = "Register New Account";
+                    document.getElementById('gateway-success').innerText = "✅ Account created successfully! Switch to log in view to access assignments.";
+                    document.getElementById('gateway-success').classList.remove('hidden');
+                    // Reset registration values
+                    document.getElementById('gate-name').value = ""; document.getElementById('gate-mobile').value = "";
+                    document.getElementById('gate-username').value = ""; document.getElementById('gate-password').value = "";
+                    toggleGatewayMode();
+                });
+            }
+        }
+
+        function loadPerformanceHistory() {
             const tableBox = document.getElementById('history-rows-box');
             tableBox.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400">Loading secure scores matrix...</td></tr>`;
 
             executeSecureGet({ action: "getHistory", username: loggedInUser.username }, "handleHistory", function(data) {
-                // Keep track of which exams have already been submitted
                 let completedExams = new Set();
-
                 if(data && data.status === "success" && data.history.length > 0) {
                     tableBox.innerHTML = "";
                     data.history.forEach(row => {
-                        // Normalize the name to match the assignment buttons (e.g. "Mock Test 1")
                         completedExams.add(row.examName.trim().toLowerCase());
-
                         const tr = document.createElement('tr');
                         tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
                         tr.innerHTML = `<td class="py-3.5 font-bold text-gray-900">${row.examName}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionA}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionB}</td><td class="py-3.5 text-center text-emerald-600 font-extrabold">${row.total}</td>`;
@@ -218,54 +257,27 @@
                 } else {
                     tableBox.innerHTML = `<tr><td colspan="4" class="py-5 text-center text-gray-400 font-normal">No past performance submissions found. Ready for first mock evaluation!</td></tr>`;
                 }
-
-                // 🔥 LOCK EXAM ATTEMPTS: Update the active assignments panel based on submission history
                 updateExamActionButtons(completedExams);
             });
         }
 
         function updateExamActionButtons(completedExams) {
             const examsBox = document.getElementById('active-exams-box');
-            
-            // Define your active exams here (We can later pull this from the sheet too)
-            const availableExams = [
-                { name: "Mock Test 1", duration: "75 Minutes | Math Matrix" }
-            ];
-
+            const availableExams = [ { name: "Mock Test 1", duration: "75 Minutes" } ];
             examsBox.innerHTML = "";
             availableExams.forEach(exam => {
                 const examKey = exam.name.trim().toLowerCase();
-                let actionHTML = "";
-
-                if (completedExams.has(examKey)) {
-                    // If username exists in that test sheet, lock the button permanently
-                    actionHTML = `
-                        <div class="w-full bg-gray-100 text-gray-400 font-bold py-2 rounded-lg text-sm text-center border border-gray-200 select-none">
-                            🔒 Attempt Submitted
-                        </div>`;
-                } else {
-                    // Otherwise, allow them to click and start the test
-                    actionHTML = `
-                        <button onclick="launchExam('${exam.name}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition cursor-pointer shadow-xs text-center">
-                            Start Assignment
-                        </button>`;
-                }
-
-                const card = document.createElement('div');
-                card.className = "p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex flex-col gap-2";
-                card.innerHTML = `
-                    <div class="font-bold text-gray-900 text-base">${exam.name}</div>
-                    <div class="text-xs text-gray-500 font-medium">Duration: ${exam.duration}</div>
-                    ${actionHTML}
-                `;
+                let actionHTML = completedExams.has(examKey) ? 
+                    `<div class="w-full bg-gray-100 text-gray-400 font-bold py-2 rounded-lg text-sm text-center border border-gray-200 select-none">🔒 Attempt Submitted</div>` : 
+                    `<button onclick="launchExam('${exam.name}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition shadow-xs cursor-pointer text-center">Start Assignment</button>`;
+                const card = document.createElement('div'); card.className = "p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex flex-col gap-2";
+                card.innerHTML = `<div class="font-bold text-gray-900 text-base">${exam.name}</div><div class="text-xs text-gray-500 font-medium">Duration: ${exam.duration}</div>${actionHTML}`;
                 examsBox.appendChild(card);
             });
         }
 
-
         function launchExam(examName) {
-            currentExamName = examName;
-            userResponses = {}; timeRemaining = 75 * 60;
+            currentExamName = examName; userResponses = {}; timeRemaining = 75 * 60;
             document.getElementById('current-test-title').innerText = examName.toUpperCase();
             document.getElementById('test-display-user').innerText = `${loggedInUser.name} (${loggedInUser.username})`;
             document.getElementById('dashboard-screen').classList.add('hidden');
@@ -317,12 +329,11 @@
         function clearResponse() { delete userResponses[currentIdx]; loadQuestion(currentIdx); }
         function prevQuestion() { if (currentIdx > 0) loadQuestion(currentIdx - 1); }
         function nextQuestion() { if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1); }
-        function confirmSubmit() { if (confirm("Are you sure you want to finalize and submit this exam assignment?")) evaluateAndDisplayResults(); }
+        function confirmSubmit() { if (confirm("Are you sure you want to finalize this test?")) evaluateAndDisplayResults(); }
 
         function evaluateAndDisplayResults() {
             clearInterval(timerInterval);
             let totalScore = 0, secA = 0, secB = 0, correct = 0, incorrect = 0;
-
             questions.forEach((q, idx) => {
                 const response = userResponses[idx]; let questionMarks = 0;
                 if (response !== undefined && response !== "") {
@@ -341,13 +352,12 @@
             document.getElementById('test-interface').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
-            // 📊 POOL SCORE RECORD DIRECTLY TO Live Isolated standalone sheet via Server postData pipes
             fetch(GOOGLE_SHEET_WEBAPP_URL, {
                 method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ examName: currentExamName, username: loggedInUser.username, sectionA: secA, sectionB: secB, totalScore: totalScore })
             })
             .then(() => {
-                document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully with remote spreadsheet file!";
+                document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully!";
                 document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
             });
         }
@@ -360,9 +370,9 @@
 
         function processLogout() {
             loggedInUser = null;
-            document.getElementById('login-username').value = ""; document.getElementById('login-password').value = "";
+            document.getElementById('gate-username').value = ""; document.getElementById('gate-password').value = "";
             document.getElementById('dashboard-screen').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('gateway-screen').classList.remove('hidden');
         }
     </script>
 </body>
