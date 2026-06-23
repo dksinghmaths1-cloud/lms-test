@@ -10,7 +10,7 @@
 
     <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 px-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-100">
-            <h1 class="text-2xl font-black text-gray-900 tracking-tight">D.K. SINGH CLASSES</h1>
+            <h1 class="text-2xl font-black text-gray-900 tracking-tight">Mathematics by D.K. Singh</h1>
             <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-1">🎯 Unified Student Portal</p>
             
             <div id="login-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium">
@@ -45,7 +45,7 @@
             </button>
         </header>
 
-        <main class="flex-1 p-6 max-w-2xl mx-auto w-full">
+        <main class="flex-1 p-6 max-w-2xl mx-auto w-full space-y-6">
             <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                 <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📝 Your Active Batch Assignment</h3>
                 
@@ -61,21 +61,37 @@
                     <div class="text-xs text-gray-500 leading-relaxed bg-white border border-gray-100 p-3 rounded-xl font-medium">
                         ⚠️ Clicking the button below will open your exam page. Your session will be invigilated. Tab-switching or minimizing the screen will cause an immediate session lock.
                     </div>
-                    <div id="exam-action-placement">
-                        </div>
+                    <div id="exam-action-placement"></div>
                 </div>
 
                 <div id="no-exam-card" class="hidden text-center py-8 px-4 border border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
                     <span class="text-3xl block mb-2">🎯</span>
                     <div class="font-bold text-gray-800 text-base">No Active Exams Scheduled</div>
-                    <p class="text-xs text-gray-400 font-medium mt-1">There are no assignments currently live for your batch matrix. Enjoy your study tracking!</p>
+                    <p class="text-xs text-gray-400 font-medium mt-1">There are no assignments currently live for your batch matrix.</p>
+                </div>
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📊 Past Examination Records History</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 text-gray-400 text-xs uppercase tracking-wider">
+                                <th class="py-3 px-2">Exam Title Reference</th>
+                                <th class="py-3 px-2 text-center">Sec. A</th>
+                                <th class="py-3 px-2 text-center">Sec. B</th>
+                                <th class="py-3 px-2 text-right">Final Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-rows-container">
+                            </tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // 🛰️ GLOBAL CONTROL PARAMETERS
         const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
         
         let loggedInUser = null;
@@ -96,7 +112,6 @@
             document.getElementById('login-error').classList.add('hidden');
 
             if (!user || !pass) return;
-
             document.getElementById('login-btn').innerText = "Verifying Credentials...";
             
             executeSecureGet({ action: "login", username: user, password: pass }, "handleLogin", function(data) {
@@ -111,6 +126,7 @@
                     document.getElementById('dashboard-screen').classList.remove('hidden');
                     
                     evaluateBatchAssignmentRouting();
+                    populateHistoricalScoreTable(data.history || []);
                 } else {
                     document.getElementById('login-error').classList.remove('hidden');
                 }
@@ -122,7 +138,6 @@
             document.getElementById('active-exam-card').classList.add('hidden');
             document.getElementById('no-exam-card').classList.add('hidden');
 
-            // 🛑 CRITICAL INTEGRATION SWITCH: If URL field in spreadsheet is blank, completely dissolve card visibility
             if (!batchExamUrl || batchExamUrl.trim() === "" || batchExamUrl.indexOf("http") === -1) {
                 document.getElementById('no-exam-card').classList.remove('hidden');
                 return;
@@ -134,7 +149,6 @@
             const buttonPlacement = document.getElementById('exam-action-placement');
             buttonPlacement.innerHTML = `<div class="text-sm font-semibold text-gray-400 py-2 text-center animate-pulse">Running secure system pre-flight attempt verification...</div>`;
 
-            // 🔒 CROSS-VERIFICATION WALL: Hits database to check if student username already submitted a row
             executeSecureGet({ action: "checkAttempt", username: loggedInUser.username, examName: batchExamTitle }, "handleLockCheck", function(data) {
                 if (data && data.attempted === true) {
                     buttonPlacement.innerHTML = `<div class="w-full bg-gray-100 text-gray-400 font-bold py-3 rounded-xl text-sm text-center border border-gray-200 select-none cursor-not-allowed">🔒 Attempt Already Submitted</div>`;
@@ -144,14 +158,31 @@
             });
         }
 
+        function populateHistoricalScoreTable(logs) {
+            const container = document.getElementById('history-rows-container');
+            container.innerHTML = "";
+            
+            if (logs.length === 0) {
+                container.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400 font-medium text-xs">No previous test attempt sheets found for this account identity.</td></tr>`;
+                return;
+            }
+            
+            logs.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-100 text-gray-700 font-medium hover:bg-gray-50/50 transition";
+                tr.innerHTML = `
+                    <td class="py-3.5 px-2 font-bold text-gray-900">${row.examName}</td>
+                    <td class="py-3.5 px-2 text-center text-gray-500">${row.sectionA}</td>
+                    <td class="py-3.5 px-2 text-center text-gray-500">${row.sectionB}</td>
+                    <td class="py-3.5 px-2 text-right font-black text-indigo-600 text-base">${row.totalScore}</td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
         function launchSecureExamWindow() {
-            // 🚀 THE ULTIMATE HANDSHAKE STRING ENCODER: Passes username and candidate name quietly inside URL parameters
             const launchUrl = `${batchExamUrl}?user=${encodeURIComponent(loggedInUser.username)}&name=${encodeURIComponent(loggedInUser.name)}`;
-            
-            // Launch the test in an isolated browser layout context window tabs profile
             window.open(launchUrl, '_blank', 'noopener,noreferrer');
-            
-            // Force a rapid portal lock layout reload loop switch state so they can't double tap
             setTimeout(() => { evaluateBatchAssignmentRouting(); }, 3000);
         }
 
