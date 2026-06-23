@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics by D.K. Singh - Premium Secure Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="setupKaTeX();"></script>
+    
+    <style>
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800" oncontextmenu="return false;">
+
+    <div id="lockout-screen" class="hidden fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center p-4 text-center">
+        <div class="bg-white p-8 rounded-2xl max-w-md w-full shadow-2xl border-t-8 border-red-600">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">⚠️</div>
+            <h2 class="text-2xl font-black text-gray-900" id="lockout-title">TEST LOCKED OUT</h2>
+            <p class="text-sm text-gray-600 mt-2 leading-relaxed" id="lockout-msg">
+                A window switch or system interruption was detected. The test has been paused. Please call the **Invigilator** to verify and resume your session.
+            </p>
+            <div id="pin-box" class="mt-6">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider text-left mb-2">Invigilator Security PIN:</label>
+                <input type="password" id="pin-input" class="w-full text-center tracking-widest text-2xl font-mono px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none" placeholder="••••">
+                <button onclick="verifyAndResume()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl mt-4 transition cursor-pointer shadow-md">
+                    Verify & Resume Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 to-indigo-900 px-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">MATHEMATICS BY D.K. SINGH</h1>
+            <p class="text-red-600 font-semibold mt-1">🔒 SECURE INVIGILATED EXAM</p>
+            
+            <div class="my-6 p-4 border border-indigo-100 bg-indigo-50/50 rounded-xl text-left text-sm space-y-1">
+                <p class="text-gray-700"><strong>Candidate Profile:</strong> <span id="welcome-name" class="font-bold text-indigo-600">Loading identity...</span></p>
+                <p class="text-gray-700"><strong>Assignment:</strong> <span class="font-bold text-gray-900">Mock Test 2</span></p>
+            </div>
+
+            <div class="text-left border border-red-100 bg-red-50/50 p-4 rounded-lg text-xs text-red-800 mb-6">
+                <strong>🚨 ANTI-CHEAT DISCIPLINE:</strong>
+                <ul class="list-disc ml-4 mt-1.5 space-y-1">
+                    <li>Leaving or clicking out of this tab will instantly lock your exam sheet.</li>
+                    <li>The session can only be unlocked using your supervisor's authentication PIN.</li>
+                </ul>
+            </div>
+            
+            <button onclick="startTest()" id="start-btn" disabled class="w-full bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-not-allowed shadow-md">
+                Verifying Credentials...
+            </button>
+        </div>
+    </div>
+
+    <div id="test-interface" class="hidden min-h-screen flex flex-col">
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-sm">
+            <div>
+                <h1 class="text-xl font-bold text-gray-900">MATHEMATICS BY D.K. SINGH</h1>
+                <p class="text-sm text-gray-500 font-medium">Candidate Profile: <span id="display-name" class="text-gray-800 font-bold"></span></p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-red-50 border border-red-200 px-4 py-2 rounded-lg text-center">
+                    <span class="text-xs text-red-500 font-bold block uppercase tracking-wide">Time Remaining</span>
+                    <span id="timer" class="text-xl font-mono font-bold text-red-600">75:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md cursor-pointer">Submit Test</button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col md:flex-row">
+            <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
+                <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
+                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section 1: Single Correct Choice</h2>
+                    <p id="section-marking" class="text-xs text-indigo-700 mt-0.5">Marking Scheme: +4 for Correct, -1 for Incorrect.</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-xs min-h-[300px] flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                            <span id="question-number-tag" class="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded-full">Question 1 of 25</span>
+                        </div>
+                        <div id="question-text" class="text-lg leading-relaxed mb-6 font-medium text-gray-900"></div>
+                        <div id="options-container" class="space-y-3"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-6 mt-8">
+                        <button onclick="prevQuestion()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-5 rounded-lg transition border border-gray-200 cursor-pointer">Previous</button>
+                        <button onclick="clearResponse()" class="text-sm text-gray-500 hover:text-red-600 font-semibold transition cursor-pointer">Clear Response</button>
+                        <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition shadow-xs cursor-pointer">Next</button>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 flex flex-col justify-between sticky top-[80px] h-[calc(100vh-80px)]">
+                <div>
+                    <h3 class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-4">Question Palette</h3>
+                    <div class="grid grid-cols-5 gap-2.5" id="palette-grid"></div>
+                </div>
+                <div class="border-t border-gray-100 pt-4 mt-6 space-y-2">
+                    <div class="flex items-center gap-3 text-xs font-medium text-gray-600">
+                        <span class="w-4 h-4 bg-indigo-600 rounded block"></span> Answered
+                    </div>
+                    <div class="flex items-center gap-3 text-xs font-medium text-gray-600">
+                        <span class="w-4 h-4 bg-white border-2 border-gray-300 rounded block"></span> Unanswered
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden min-h-screen bg-gray-100 px-4 py-12 flex flex-col items-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full text-center border border-gray-200 mb-8">
+            <h2 class="text-3xl font-extrabold text-green-600">Test Submitted Successfully!</h2>
+            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Syncing metrics data directly to master database matrix...</p>
+            
+            <div class="grid grid-cols-3 gap-4 my-8">
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                    <span class="text-2xl font-black text-indigo-700" id="final-score">0</span>
+                    <span class="block text-xs text-indigo-600 font-bold mt-1 uppercase">Total Score</span>
+                </div>
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                    <span class="text-2xl font-black text-emerald-700" id="final-correct">0</span>
+                    <span class="block text-xs text-green-600 font-bold mt-1 uppercase">Correct</span>
+                </div>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <span class="text-2xl font-black text-red-700" id="final-incorrect">0</span>
+                    <span class="block text-xs text-red-600 font-bold mt-1 uppercase">Incorrect</span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-xl text-left text-sm space-y-1.5 border border-gray-200">
+                <p class="text-gray-700 font-medium"><strong>Student Identity Reference:</strong> <span id="res-name"></span></p>
+                <p class="text-gray-700 font-medium"><strong>System Account User:</strong> <span id="res-username"></span></p>
+            </div>
+            
+            <button onclick="window.close()" class="mt-6 bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-lg transition cursor-pointer shadow-md">
+                Close Test Window
+            </button>
+        </div>
+
+        <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+            <h3 class="text-xl font-bold text-gray-900 border-b border-gray-200 pb-3 mb-6">📝 Detailed Question Evaluation</h3>
+            <div id="detailed-review-container" class="space-y-8"></div>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
+        const EXAM_NAME = "Mock Test 2";
+        const INIVIGILATOR_PIN = "5831";
+
+        const questions = [
+            { id: 1, type: "mcq", text: String.raw`In a triangle $ABC$, if $A-B=120^{\circ}$ and $\sin\frac{A}{2}\sin\frac{B}{2}\sin\frac{C}{2}=\frac{1}{32}$, then $\cos C$ equals:`, options: ["$3/4$", "$2/3$", "$5/6$", "$7/8$"], correct: 3 },
+            { id: 2, type: "mcq", text: String.raw`The value of the expression $\frac{1}{\cos 290^{\circ}}+\frac{1}{\sqrt{3}\sin 250^{\circ}}$ is:`, options: [String.raw`$\frac{\sqrt{3}}{4}$`, String.raw`$\frac{4}{\sqrt{3}}$`, String.raw`$\frac{2}{\sqrt{3}}$`, String.raw`$\frac{\sqrt{3}}{2}$`], correct: 1 },
+            { id: 3, type: "mcq", text: String.raw`If $a\cos^{3}\alpha+3a\cos\alpha\sin^{2}\alpha=m$ and $a\sin^{3}\alpha+3a\cos^{2}\alpha\sin\alpha=n$, then $(m+n)^{2/3}+(m-n)^{2/3}$ is equal to:`, options: ["$2a^{2}$", "$2a^{1/3}$", "$2a^{2/3}$", "$2a^{3}$"], correct: 2 },
+            { id: 4, type: "mcq", text: String.raw`If $x=\sin\alpha,$ $y=\sin\beta$, $z=\sin(\alpha+\beta)$ then $\cos(\alpha+\beta)=$`, options: [String.raw`$\frac{x^{2}+y^{2}+z^{2}}{2xy}$`, String.raw`$\frac{x^{2}+y^{2}-z^{2}}{xy}$`, String.raw`$\frac{z^{2}-x^{2}-y^{2}}{2xy}$`, String.raw`$\frac{z^{2}-x^{2}-y^{2}}{xy}$`], correct: 2 },
+            { id: 5, type: "mcq", text: String.raw`The expression $\frac{\cos 6x+6\cos 4x+15\cos 2x+10}{\cos 5x+5\cos 3x+10\cos x}$ is equal to:`, options: [String.raw`$\cos 2x$`, String.raw` $2\cos x$`, String.raw`$\cos^{2}x$`, String.raw` $1+\cos x$`], correct: 1 },
+            { id: 6, type: "mcq", text: String.raw`$\cos(A+B)+\sin(A-B)=?$`, options: [String.raw`$(\cos A-\sin A)(\cos B+\sin B)$`, String.raw`$(\sin A-\cos A)(\cos B+\sin B)$`, String.raw`$(\cos A-\sin A)(\cos B-\cos B)$`, String.raw`$(\cos A+\sin A)(\cos B-\sin B)$`], correct: 3 },
+            { id: 7, type: "mcq", text: String.raw`Let $\frac{\sin 3\theta}{\cos 2\theta}=p$ where $\theta\in\left(\frac{18\pi}{48},\frac{23\pi}{48}\right)$ and $\frac{\sin 3\beta}{\cos 2\beta}=q$ where $\beta\in\left(\frac{13\pi}{48},\frac{14\pi}{48}\right)$. Then:`, options: ["$p>0$ and $q>0$", "$p>0$ and $q<0$", "$p<0$ and $q<0$", "$p<0$ and $q>0$"], correct: 1 },
+            { id: 8, type: "mcq", text: String.raw`Each of the four statements given below are either True or False.<br>I. $\sin 765^{\circ}=-1/\sqrt{2}$<br>II. $\csc(-1410^{\circ})=2$<br>III. $\tan(13\pi/3)=1/\sqrt{3}$<br>IV. $\cot(-15\pi/4)=-1$<br><br>Indicate the correct order of sequence, where 'T' stands for true and 'F' stands for false:`, options: ["FTFT", "FFTT", "TFFF", "FTFF"], correct: 3 },
+            { id: 9, type: "mcq", text: String.raw`Find the smallest natural '$n$' such that $\tan(107n)^{\circ}=\frac{\cos 96^{\circ}+\sin 96^{\circ}}{\cos 96^{\circ}-\sin 96^{\circ}}$:`, options: ["$n=2$", "$n=3$", "$n=4$", "$n=5$"], correct: 1 },
+            { id: 10, type: "mcq", text: String.raw`The value of $\frac{\sin\frac{\pi}{48}+\sin\frac{3\pi}{48}+\sin\frac{5\pi}{48}+\sin\frac{7\pi}{48}}{\cos\frac{\pi}{48}+\cos\frac{3\pi}{48}+\cos\frac{5\pi}{48}+\cos\frac{7\pi}{48}}$ is equal to:`, options: ["$2-\sqrt{3}$", "$2+\sqrt{3}$", "$\sqrt{2}-1$", "$\sqrt{2}+1$"], correct: 0 },
+            { id: 11, type: "mcq", text: String.raw`Let $x=2^{(\log_{2}3)(\log_{3}4)\dots(\log_{99}100)}$, then the value of $\cos\left(\frac{x\pi}{4}\right)+\sin\left(\frac{x\pi}{4}\right)$ is equal to:`, options: ["1", String.raw`$\frac{1}{\sqrt{2}}$`, String.raw`$\sqrt{2}$`, "-1"], correct: 3 },
+            { id: 12, type: "mcq", text: String.raw`Number of solution(s) of the equation $\log_{\sqrt{x}}(x+|x-3|)=\log_{x}(2x+5+2|x-3|)$ is:`, options: ["0", "1", "2", "Infinitely many"], correct: 1 },
+            { id: 13, type: "mcq", text: String.raw`Given $\log_{10}2=0.3010$, $\log_{10}3=0.4771$. Using this information or otherwise, choose the correct statements:`, options: ["$8^{150}>9^{100}$", "$16^{75}>81^{50}$", "$\log_{2/3}3>0$", "None of these is correct"], correct: 0 },
+            { id: 14, type: "mcq", text: String.raw`In the inequality below the value of the angle is expressed in radian measure. Which one of the inequalities below is true?`, options: ["$\sin 1 < \sin 2 < \sin 3$", "$\sin 3 < \sin 2 < \sin 1$", "$\sin 2 < \sin 1 < \sin 3$", "$\sin 3 < \sin 1 < \sin 2$"], correct: 3 },
+            { id: 15, type: "mcq", text: String.raw`If $\theta$ is eliminated from the equations $x=a\cos(\theta-\alpha)$ and $y=b\cos(\theta-\beta)$, then $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}-\frac{2xy}{ab}\cos(\alpha-\beta)$ is equal to:`, options: [String.raw`$\sec^{2}(\alpha-\beta)$`, String.raw`$\csc^{2}(\alpha-\beta)$`, String.raw`$\cos^{2}(\alpha-\beta)$`, String.raw`$\sin^{2}(\alpha-\beta)$`], correct: 3 },
+            { id: 16, type: "mcq", text: String.raw`The number of real values of $x$ satisfying the equation $3|x-2|+|1-5x|+4|3x+1|=13$ is:`, options: ["1", "4", "2", "3"], correct: 2 },
+            { id: 17, type: "mcq", text: String.raw`The product of all values of $x$ satisfying the equation $|x-1|^{\log_{3}x^{2}-2\log_{x}9}=(x-1)^{7}$ is:`, options: ["162", String.raw`$\frac{162}{\sqrt{3}}$`, String.raw`$\frac{81}{\sqrt{3}}$`, "81"], correct: 0 },
+            { id: 18, type: "mcq", text: String.raw`If $\tan\gamma=\sec\alpha\sec\beta+\tan\alpha\tan\beta$ then the greatest value of $\cos 2\gamma$ is:`, options: ["-1", String.raw`$\frac{1}{2}$`, String.raw`$-\frac{1}{2}$`, "0"], correct: 3 },
+            { id: 19, type: "mcq", text: String.raw`The complete set of values of $x$ satisfying the inequality $\log_{3}\left(\frac{|x^{2}-4x|+3}{x^{2}+|x-5|}\right)\ge0$ is:`, options: [String.raw`$(-\infty,-\frac{2}{3}]\cup[\frac{1}{2},2]$`, String.raw`$(-\infty,-1]\cup[\frac{1}{2},2]$`, String.raw`$[\frac{1}{2},\frac{2}{3}]\cup[1,\infty)$`, String.raw`$[-\infty,-\frac{1}{2}]\cup[\frac{2}{3},2]$`], correct: 0 },
+            { id: 20, type: "mcq", text: String.raw`Let $f(x)=\sqrt{1+x\sqrt{1+(x+1)\sqrt{1+(x+2)(x+4)}}}$ for $x>-1$ then the value of $\frac{f(\tan 22^{\circ})f(\tan 23^{\circ})}{\left|\left|\log_{\frac{1}{5}}12+\log_{\frac{1}{5}}3\right|-\left|\log_{\frac{1}{5}}20\right|\right|}$ is equal to:`, options: [String.raw`$\frac{1}{\log_{5}2}$`, String.raw`$\frac{1}{\log_{5}4}$`, "1", "2"], correct: 3 },
+            
+            // SECTION 2: NUMERICALS
+            { id: 21, type: "numeric", text: String.raw`If $\log_{10}\left(\frac{1025}{1024}\right)=a$ and $\log_{10}(2)=b$ then $\log_{10}(4100)=ma+nb$, where $m, n\in\mathbb{N}$. Find the value of $m+n$.`, correct: "13" },
+            { id: 22, type: "numeric", text: String.raw`Find the sum of all integral values of $x$ satisfying the inequality: $2\log_{\frac{1}{4}}(x+5)>\frac{9}{4}log_{\frac{1}{3\sqrt{3}}}(9)+\log_{\sqrt{x+5}}(2)$`, correct: "-2" },
+            { id: 23, type: "numeric", text: String.raw`Let $P(k)=\left(1+\cos\frac{\pi}{4k}\right)\left(1+\cos\frac{(2k-1)\pi}{4k}\right)\left(1+\cos\frac{(2k+1)\pi}{4k}\right)\left(1+\cos\frac{(4k-1)\pi}{4k}\right)$. If $P(5)+P(6)=\frac{7-\sqrt{a}-\sqrt{5}}{b}$ where $a, b\in\mathbb{N}$, find the value of $a+b$.`, correct: "44" },
+            { id: 24, type: "numeric", text: String.raw`The value of $\frac{\sec 11^{\circ}\sec 19^{\circ}-2\cot 71^{\circ}}{\cot 79^{\circ}}$ is equal to:`, correct: "2" },
+            { id: 25, type: "numeric", text: String.raw`The value of $\left(\frac{\tan\frac{\pi}{16}+\tan\frac{5\pi}{16}+\tan\frac{9\pi}{16}+\tan\frac{13\pi}{16}}{\sin\frac{\pi}{16}\cos\frac{\pi}{16}\left(\cos^{4}\frac{\pi}{16}-\sin^{4}\frac{\pi}{16}\right)}\right)^{2}$ is equal to:`, correct: "512" }
+        ];
+
+        let studentUsername = "";
+        let studentName = "";
+        let currentIdx = 0;
+        let userResponses = {};
+        let timeRemaining = 75 * 60;
+        let timerInterval;
+        let testRunning = false;
+        let isLockedOut = false;
+
+        function setupKaTeX() {
+            window.renderMath = function() {
+                if (typeof renderMathInElement === "function") {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: "$$", right: "$$", display: true},
+                            {left: "$", right: "$", display: false}
+                        ],
+                        throwOnError: false
+                    });
+                }
+            };
+            window.renderMath();
+        }
+
+        // 🛰️ URL INCOMING PARSE HANDSHAKE ENGINE
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            studentUsername = urlParams.get('user');
+            studentName = urlParams.get('name');
+
+            if (!studentUsername || !studentName) {
+                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-gray-900 text-white text-xl font-bold font-mono">⚠️ Access Denied: Invalid Session Handshake Link Parameter Profile.</div>`;
+                return;
+            }
+
+            document.getElementById('welcome-name').innerText = decodeURIComponent(studentName);
+            
+            // Background check to see if student already took this test
+            executeSecureCheck({ action: "checkAttempt", username: studentUsername, examName: EXAM_NAME }, "handleAttemptCheck", function(data) {
+                if (data && data.attempted === true) {
+                    isLockedOut = true;
+                    document.getElementById('lockout-title').innerText = "ATTEMPT BLOCKED";
+                    document.getElementById('lockout-msg').innerText = "System records confirm you have already submitted this exam paper session. Repeat attempts are strictly locked.";
+                    document.getElementById('pin-box').className = "hidden";
+                    document.getElementById('lockout-screen').classList.remove('hidden');
+                } else {
+                    const startBtn = document.getElementById('start-btn');
+                    startBtn.innerText = "Agree & Start Exam";
+                    startBtn.disabled = false;
+                    startBtn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer shadow-md";
+                }
+            });
+        });
+
+        function executeSecureCheck(params, callbackName, callbackFn) {
+            const script = document.createElement('script');
+            window[callbackName] = function(data) { callbackFn(data); script.remove(); delete window[callbackName]; };
+            let queryString = Object.keys(params).map(key => key + '=' + encodeURIComponent(params[key])).join('&');
+            script.src = GOOGLE_SHEET_WEBAPP_URL + "?" + queryString + "&callback=" + callbackName + "&ts=" + new Date().getTime();
+            document.body.appendChild(script);
+        }
+
+        function activateSecurity() {
+            window.addEventListener('keydown', function (e) {
+                if (e.keyCode === 123 || 
+                    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                    (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85))) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.visibilityState === 'hidden' && testRunning && !isLockedOut) {
+                    triggerLockout();
+                }
+            });
+
+            window.addEventListener('blur', function() {
+                if (testRunning && !isLockedOut) {
+                    triggerLockout();
+                }
+            });
+        }
+
+        function triggerLockout() {
+            isLockedOut = true;
+            document.getElementById('lockout-screen').classList.remove('hidden');
+            document.getElementById('pin-input').value = "";
+            document.getElementById('pin-input').focus();
+        }
+
+        function verifyAndResume() {
+            if (document.getElementById('pin-input').value.trim() === INIVIGILATOR_PIN) {
+                isLockedOut = false;
+                document.getElementById('lockout-screen').classList.add('hidden');
+            } else {
+                alert("Incorrect Pin! Please ask the invigilator to enter the authorization code.");
+            }
+        }
+
+        function startTest() {
+            testRunning = true;
+            activateSecurity();
+            document.getElementById('display-name').innerText = decodeURIComponent(studentName);
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('test-interface').classList.remove('hidden');
+            buildPalette();
+            loadQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!testRunning) return;
+                if (!isLockedOut) {
+                    if (timeRemaining <= 0) {
+                        testRunning = false;
+                        clearInterval(timerInterval);
+                        evaluateAndDisplayResults();
+                    } else {
+                        timeRemaining--;
+                        let mins = Math.floor(timeRemaining / 60);
+                        let secs = timeRemaining % 60;
+                        document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    }
+                }
+            }, 1000);
+        }
+
+        function buildPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = "";
+            questions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `palette-btn-${idx}`;
+                btn.className = "border border-gray-300 font-bold py-2 rounded text-sm cursor-pointer hover:bg-gray-100 transition text-center text-gray-700 bg-white";
+                btn.innerText = q.id;
+                btn.onclick = () => loadQuestion(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loadQuestion(idx) {
+            currentIdx = idx;
+            const q = questions[idx];
+
+            questions.forEach((_, i) => {
+                const b = document.getElementById('palette-btn-' + i);
+                let baseStyle = "border font-bold py-2 rounded text-sm cursor-pointer text-center transition ";
+                if (userResponses[i] !== undefined && userResponses[i] !== "") {
+                    b.className = baseStyle + "bg-indigo-600 border-indigo-600 text-white";
+                } else {
+                    b.className = baseStyle + "bg-white border-gray-300 text-gray-700 hover:bg-gray-50";
+                }
+            });
+            document.getElementById('palette-btn-' + idx).classList.add('ring-2', 'ring-offset-2', 'ring-indigo-500');
+
+            if (q.id <= 20) {
+                document.getElementById('section-title').innerText = "Section 1: Single Correct Choice Type";
+                document.getElementById('section-marking').innerText = "Marking Scheme: +4 for Correct, -1 for Incorrect.";
+            } else {
+                document.getElementById('section-title').innerText = "Section 2: Integral / Numerical Answer Type";
+                document.getElementById('section-marking').innerText = "Marking Scheme: +4 for Correct, -1 for Incorrect.";
+            }
+
+            document.getElementById('question-number-tag').innerText = `Question ${q.id} of 25`;
+            document.getElementById('question-text').innerText = q.text;
+
+            const optBox = document.getElementById('options-container');
+            optBox.innerHTML = "";
+
+            if (q.type === "mcq") {
+                const labels = ["(A)", "(B)", "(C)", "(D)"];
+                q.options.forEach((opt, oIdx) => {
+                    const checked = userResponses[idx] === oIdx ? 'checked' : '';
+                    const div = document.createElement('div');
+                    div.className = `flex items-center p-3 border rounded-xl cursor-pointer hover:bg-gray-50 transition ${userResponses[idx] === oIdx ? 'border-indigo-600 bg-indigo-50/50' : 'border-gray-200'}`;
+                    div.onclick = () => { userResponses[idx] = oIdx; loadQuestion(idx); };
+                    div.innerHTML = `
+                        <input type="radio" name="q-opt" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" ${checked}>
+                        <span class="ml-3 font-semibold text-gray-700 mr-2">${labels[oIdx]}</span>
+                        <span class="text-gray-900 font-medium">${opt}</span>
+                    `;
+                    optBox.appendChild(div);
+                });
+            } else {
+                const currentVal = userResponses[idx] !== undefined ? userResponses[idx] : "";
+                optBox.innerHTML = `
+                    <div class="mt-2">
+                        <label class="block text-sm font-semibold text-gray-600 uppercase mb-2">Type your integer answer:</label>
+                        <input type="text" id="num-input" value="${currentVal}" oninput="userResponses[${idx}]=this.value.trim()" class="w-48 px-4 py-3 border-2 border-gray-300 rounded-xl font-mono text-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="e.g. 5">
+                    </div>
+                `;
+            }
+
+            if (window.renderMath) window.renderMath();
+        }
+
+        function clearResponse() { delete userResponses[currentIdx]; loadQuestion(currentIdx); }
+        function prevQuestion() { if (currentIdx > 0) loadQuestion(currentIdx - 1); }
+        function nextQuestion() { if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1); }
+        function confirmSubmit() { if (confirm("Are you sure you want to finalize this exam paper submission?")) { testRunning = false; clearInterval(timerInterval); evaluateAndDisplayResults(); } }
+
+        function evaluateAndDisplayResults() {
+            let totalScore = 0, sectionAScore = 0, sectionBScore = 0, correctCount = 0, incorrectCount = 0;
+            const reviewContainer = document.getElementById('detailed-review-container');
+            reviewContainer.innerHTML = "";
+
+            questions.forEach((q, idx) => {
+                const response = userResponses[idx];
+                let statusHTML = "", isCorrect = false, questionMarks = 0;
+
+                if (response !== undefined && response !== "") {
+                    if (q.type === "mcq") {
+                        if (parseInt(response) === q.correct) { questionMarks = 4; correctCount++; isCorrect = true; } else { questionMarks = -1; incorrectCount++; }
+                    } else {
+                        if (response.toString().toLowerCase() === q.correct.toString().toLowerCase()) { questionMarks = 4; correctCount++; isCorrect = true; } else { questionMarks = -1; incorrectCount++; }
+                    }
+                }
+
+                totalScore += questionMarks;
+                if (q.id <= 20) sectionAScore += questionMarks; else sectionBScore += questionMarks;
+
+                if (response === undefined || response === "") {
+                    statusHTML = `<span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Unanswered</span>`;
+                } else if (isCorrect) {
+                    statusHTML = `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Correct</span>`;
+                } else {
+                    statusHTML = `<span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Incorrect</span>`;
+                }
+
+                let optionsHTML = "";
+                if (q.type === "mcq") {
+                    const optionLabels = ["(A)", "(B)", "(C)", "(D)"];
+                    optionsHTML = `<div class="mt-3 space-y-2 border-t border-gray-100 pt-3">`;
+                    q.options.forEach((opt, oIdx) => {
+                        let borderStyle = "border-gray-200 bg-gray-50/50";
+                        let tag = "";
+                        if (oIdx === q.correct) { borderStyle = "border-green-500 bg-green-50 text-green-900 font-semibold"; tag = " <span class='text-xs text-green-600 font-bold ml-2'>(Correct Key)</span>"; }
+                        if (response !== undefined && oIdx === parseInt(response)) {
+                            if (!isCorrect) { borderStyle = "border-red-500 bg-red-50 text-red-900 font-semibold"; tag = " <span class='text-xs text-red-600 font-bold ml-2'>(Your Selection)</span>"; }
+                            else { tag = " <span class='text-xs text-green-600 font-bold ml-2'>(Your Selection & Correct)</span>"; }
+                        }
+                        optionsHTML += `<div class="p-2 border rounded-lg text-sm flex items-center ${borderStyle}"><span class="font-bold mr-2">${optionLabels[oIdx]}</span> ${opt} ${tag}</div>`;
+                    });
+                    optionsHTML += `</div>`;
+                } else {
+                    let studentAnsText = response !== undefined && response !== "" ? response : "None";
+                    optionsHTML = `<div class="grid grid-cols-2 gap-2 text-xs border-t border-gray-100 pt-3 mt-2"><div class="p-2 border rounded bg-gray-50"><strong>Your Written Input:</strong> <span class="${response !== undefined ? (isCorrect ? 'text-green-700 font-bold' : 'text-red-700 font-bold') : ''}">${studentAnsText}</span></div><div class="p-2 border rounded bg-green-50 text-green-800"><strong>Correct Target Key Value:</strong> ${q.correct}</div></div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = `p-5 border rounded-xl shadow-xs border-gray-200 bg-white flex flex-col gap-1`;
+                card.innerHTML = `<div class="flex justify-between items-center border-b border-gray-100 pb-2 mb-2"><span class="font-bold text-gray-900 text-sm">Question ${q.id}</span>${statusHTML}</div><div class="text-gray-800 font-medium text-base mb-1">${q.text}</div>${optionsHTML}`;
+                reviewContainer.appendChild(card);
+            });
+
+            document.getElementById('res-name').innerText = decodeURIComponent(studentName);
+            document.getElementById('res-username').innerText = studentUsername;
+            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('final-correct').innerText = correctCount;
+            document.getElementById('final-incorrect').innerText = incorrectCount;
+
+            document.getElementById('test-interface').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            if (window.renderMath) window.renderMath();
+
+            // Fire scorecard packet push
+            fetch(GOOGLE_SHEET_WEBAPP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ examName: EXAM_NAME, username: studentUsername, sectionA: sectionAScore, sectionB: sectionBScore, totalScore: totalScore })
+            })
+            .then(() => {
+                document.getElementById('sheet-status').innerText = "✅ Metrics logged instantly. You can now close this test window.";
+                document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
+            });
+        }
+    </script>
+</body>
+</html>
