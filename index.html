@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D.K. Singh Classes - Smart LMS Student Portal</title>
+    <title>Mathematics by D.K. Singh - Student Portal Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="setupKaTeX();"></script>
-    <style>
-        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-    </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800" oncontextmenu="return false;">
+<body class="bg-gray-100 font-sans text-gray-800">
 
     <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 px-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-100">
             <h1 class="text-2xl font-black text-gray-900 tracking-tight">D.K. SINGH CLASSES</h1>
-            <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-1">🎯 Personalized Learning Portal</p>
+            <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-1">🎯 Unified Student Portal</p>
             
             <div id="login-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium">
-                ❌ Invalid Username or Password.
+                ❌ Invalid Batch Username or Password Match.
             </div>
 
             <div class="mt-6 space-y-3.5 text-left">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Student Username:</label>
-                    <input type="text" id="login-username" placeholder="e.g. student1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Batch Account Username:</label>
+                    <input type="text" id="login-username" placeholder="e.g. 11_rahul or 12_priya" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Account Password:</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password:</label>
                     <input type="password" id="login-password" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
             </div>
@@ -43,107 +37,50 @@
     <div id="dashboard-screen" class="hidden min-h-screen flex flex-col">
         <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
             <div>
-                <h1 class="text-xl font-black text-gray-900 tracking-tight">STUDENT PANEL</h1>
-                <p class="text-sm text-gray-500 font-medium">Welcome, <span id="user-display-name" class="text-indigo-600 font-bold">Student</span></p>
+                <h1 class="text-xl font-black text-gray-900 tracking-tight">STUDENT ACCOUNT PANEL</h1>
+                <p class="text-sm text-gray-500 font-medium">Welcome back, <span id="user-display-name" class="text-indigo-600 font-bold">Student</span></p>
             </div>
             <button onclick="processLogout()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded-xl border border-gray-200 transition text-sm cursor-pointer">
                 Log Out
             </button>
         </header>
 
-        <main class="flex-1 p-6 max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-1 bg-white border border-gray-200 rounded-2xl p-5 shadow-xs h-fit">
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📝 Active Assignments</h3>
-                <div id="active-exams-box" class="space-y-3"></div>
-            </div>
-            <div class="md:col-span-2 bg-white border border-gray-200 rounded-2xl p-5 shadow-xs">
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📊 Past Performance Report Card</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                <th class="pb-3 font-semibold">Exam Title</th>
-                                <th class="pb-3 font-semibold text-center">Sec. A</th>
-                                <th class="pb-3 font-semibold text-center">Sec. B</th>
-                                <th class="pb-3 font-semibold text-center">Total Score</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-rows-box" class="divide-y divide-gray-100 text-sm font-medium text-gray-700"></tbody>
-                    </table>
+        <main class="flex-1 p-6 max-w-2xl mx-auto w-full">
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📝 Your Active Batch Assignment</h3>
+                
+                <div id="assignment-loading" class="text-center py-6 text-gray-400 font-medium">
+                    🔍 Fetching your specific batch scheduling rules...
+                </div>
+
+                <div id="active-exam-card" class="hidden p-5 border border-indigo-100 bg-indigo-50/40 rounded-2xl flex flex-col gap-3">
+                    <div>
+                        <div id="exam-title-display" class="font-black text-gray-900 text-lg tracking-tight">Active Test Title</div>
+                        <p class="text-xs font-semibold text-indigo-600 mt-0.5 uppercase tracking-wider">🔒 FULL SECURITY ANTI-CHEAT ACTIVE</p>
+                    </div>
+                    <div class="text-xs text-gray-500 leading-relaxed bg-white border border-gray-100 p-3 rounded-xl font-medium">
+                        ⚠️ Clicking the button below will open your exam page. Your session will be invigilated. Tab-switching or minimizing the screen will cause an immediate session lock.
+                    </div>
+                    <div id="exam-action-placement">
+                        </div>
+                </div>
+
+                <div id="no-exam-card" class="hidden text-center py-8 px-4 border border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
+                    <span class="text-3xl block mb-2">🎯</span>
+                    <div class="font-bold text-gray-800 text-base">No Active Exams Scheduled</div>
+                    <p class="text-xs text-gray-400 font-medium mt-1">There are no assignments currently live for your batch matrix. Enjoy your study tracking!</p>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="test-interface" class="hidden min-h-screen flex flex-col bg-gray-50">
-        <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-sm">
-            <div>
-                <h1 class="text-xl font-bold text-gray-900" id="current-test-title">EXAM PORTAL</h1>
-                <p class="text-sm text-gray-500 font-medium">Active Session Profile: <span id="test-display-user" class="text-gray-800 font-semibold"></span></p>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="bg-red-50 border border-red-200 px-4 py-2 rounded-lg text-center">
-                    <span id="timer" class="text-xl font-mono font-bold text-red-600">75:00</span>
-                </div>
-                <button onclick="confirmSubmit()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md cursor-pointer">Submit Test</button>
-            </div>
-        </header>
-        <div class="flex-1 flex flex-col md:flex-row">
-            <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
-                <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
-                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section 1</h2>
-                    <p id="section-marking" class="text-xs text-indigo-700 mt-0.5">Marking Scheme: +4 / -1</p>
-                </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-6 min-h-[300px] flex flex-col justify-between shadow-xs">
-                    <div>
-                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
-                            <span id="question-number-tag" class="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded-full">Question 1</span>
-                        </div>
-                        <div id="question-text" class="text-lg leading-relaxed mb-6 font-medium text-gray-900"></div>
-                        <div id="options-container" class="space-y-3"></div>
-                    </div>
-                    <div class="flex justify-between items-center border-t border-gray-100 pt-6 mt-8">
-                        <button onclick="prevQuestion()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-5 rounded-lg border border-gray-200 cursor-pointer">Previous</button>
-                        <button onclick="clearResponse()" class="text-sm text-gray-500 hover:text-red-600 font-semibold cursor-pointer">Clear Response</button>
-                        <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg shadow-xs cursor-pointer">Next</button>
-                    </div>
-                </div>
-            </main>
-            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 sticky top-[80px] h-[calc(100vh-80px)]">
-                <h3 class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-4">Question Palette</h3>
-                <div class="grid grid-cols-5 gap-2.5" id="palette-grid"></div>
-            </aside>
-        </div>
-    </div>
-
-    <div id="result-screen" class="hidden min-h-screen bg-gray-100 px-4 py-12 flex flex-col items-center">
-        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full text-center border border-gray-200 mb-8">
-            <h2 class="text-3xl font-extrabold text-green-600">Test Submitted Successfully!</h2>
-            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Saving metrics data...</p>
-            <div class="grid grid-cols-3 gap-4 my-8">
-                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100"><span class="text-2xl font-black text-indigo-700" id="final-score">0</span><span class="block text-xs text-indigo-600 font-bold mt-1 uppercase">Total Score</span></div>
-                <div class="bg-green-50 p-4 rounded-xl border border-green-100"><span class="text-2xl font-black text-emerald-700" id="final-correct">0</span><span class="block text-xs text-green-600 font-bold mt-1 uppercase">Correct</span></div>
-                <div class="bg-red-50 p-4 rounded-xl border border-red-100"><span class="text-2xl font-black text-red-700" id="final-incorrect">0</span><span class="block text-xs text-red-600 font-bold mt-1 uppercase">Incorrect</span></div>
-            </div>
-            <button onclick="returnToDashboard()" class="mt-6 bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-lg shadow-md cursor-pointer">Return to Dashboard</button>
-        </div>
-    </div>
-
     <script>
+        // 🛰️ GLOBAL CONTROL PARAMETERS
         const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
         
-        const questions = [
-            { id: 1, type: "mcq", text: String.raw`Evaluate the fundamental core derivative boundary limit: $\lim_{x \to 0} \frac{\sin x}{x} =$`, options: ["0", "1", "$\infty$", "Undefined"], correct: 1 },
-            { id: 2, type: "numeric", text: String.raw`If $\log_{10}(x) = 2$, determine the target scalar absolute integer metric value of $x$:`, correct: "100" }
-        ];
-
-        let loggedInUser = null; let currentExamName = ""; let currentIdx = 0; let userResponses = {}; let timeRemaining = 75 * 60; let timerInterval;
-
-        function setupKaTeX() {
-            if (typeof renderMathInElement === "function") {
-                renderMathInElement(document.body, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}], throwOnError: false });
-            }
-        }
+        let loggedInUser = null;
+        let batchExamTitle = "";
+        let batchExamUrl = "";
 
         function executeSecureGet(params, callbackName, callbackFn) {
             const script = document.createElement('script');
@@ -161,168 +98,72 @@
             if (!user || !pass) return;
 
             document.getElementById('login-btn').innerText = "Verifying Credentials...";
+            
             executeSecureGet({ action: "login", username: user, password: pass }, "handleLogin", function(data) {
                 document.getElementById('login-btn').innerText = "Secure Log In";
                 if(data && data.status === "success") {
                     loggedInUser = { username: user, name: data.user.name };
-                    document.getElementById('user-display-name').innerText = data.user.name;
+                    batchExamTitle = data.examTitle;
+                    batchExamUrl = data.examUrl;
+
+                    document.getElementById('user-display-name').innerText = `${data.user.name} (Batch ${data.batch})`;
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('dashboard-screen').classList.remove('hidden');
-                    loadPerformanceHistory();
+                    
+                    evaluateBatchAssignmentRouting();
                 } else {
                     document.getElementById('login-error').classList.remove('hidden');
                 }
             });
         }
 
-        function loadPerformanceHistory() {
-            const tableBox = document.getElementById('history-rows-box');
-            tableBox.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400">Loading secure scores matrix...</td></tr>`;
+        function evaluateBatchAssignmentRouting() {
+            document.getElementById('assignment-loading').classList.add('hidden');
+            document.getElementById('active-exam-card').classList.add('hidden');
+            document.getElementById('no-exam-card').classList.add('hidden');
 
-            executeSecureGet({ action: "getHistory", username: loggedInUser.username }, "handleHistory", function(data) {
-                let completedExams = new Set();
-                if(data && data.status === "success" && data.history.length > 0) {
-                    tableBox.innerHTML = "";
-                    data.history.forEach(row => {
-                        completedExams.add(row.examName.trim().toLowerCase());
-                        const tr = document.createElement('tr');
-                        tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
-                        tr.innerHTML = `<td class="py-3.5 font-bold text-gray-900">${row.examName}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionA}</td><td class="py-3.5 text-center text-gray-600 font-semibold">${row.sectionB}</td><td class="py-3.5 text-center text-emerald-600 font-extrabold">${row.total}</td>`;
-                        tableBox.appendChild(tr);
-                    });
-                } else {
-                    tableBox.innerHTML = `<tr><td colspan="4" class="py-5 text-center text-gray-400 font-normal">No past performance submissions found. Ready for first mock evaluation!</td></tr>`;
-                }
-                updateExamActionButtons(completedExams);
-            });
-        }
-
-        function updateExamActionButtons(completedExams) {
-            const examsBox = document.getElementById('active-exams-box');
-            const availableExams = [ { name: "Mock Test 2", duration: "75 Minutes" } ];
-            examsBox.innerHTML = "";
-            availableExams.forEach(exam => {
-                const examKey = exam.name.trim().toLowerCase();
-                let actionHTML = completedExams.has(examKey) ? 
-                    `<div class="w-full bg-gray-100 text-gray-400 font-bold py-2 rounded-lg text-sm text-center border border-gray-200 select-none">🔒 Attempt Submitted</div>` : 
-                    `<button onclick="launchExam('${exam.name}')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm transition shadow-xs cursor-pointer text-center">Start Assignment</button>`;
-                const card = document.createElement('div'); card.className = "p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl flex flex-col gap-2";
-                card.innerHTML = `<div class="font-bold text-gray-900 text-base">${exam.name}</div><div class="text-xs text-gray-500 font-medium">Duration: ${exam.duration}</div>${actionHTML}`;
-                examsBox.appendChild(card);
-            });
-        }
-
-        function launchExam(examName) {
-            currentExamName = examName; userResponses = {}; timeRemaining = 75 * 60;
-            document.getElementById('current-test-title').innerText = examName.toUpperCase();
-            document.getElementById('test-display-user').innerText = `${loggedInUser.name} (${loggedInUser.username})`;
-            document.getElementById('dashboard-screen').classList.add('hidden');
-            document.getElementById('test-interface').classList.remove('hidden');
-            buildPalette(); loadQuestion(0);
-            
-            timerInterval = setInterval(() => {
-                if (timeRemaining <= 0) { 
-                    evaluateAndDisplayResults(); 
-                } else {
-                    timeRemaining--;
-                    let mins = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
-                    let secs = (timeRemaining % 60).toString().padStart(2, '0');
-                    document.getElementById('timer').innerText = `${mins}:${secs}`;
-                }
-            }, 1000);
-        }
-
-        function buildPalette() {
-            const grid = document.getElementById('palette-grid'); grid.innerHTML = "";
-            questions.forEach((q, idx) => {
-                const btn = document.createElement('button'); btn.id = `palette-btn-${idx}`;
-                btn.className = "border border-gray-300 font-bold py-2 rounded text-sm text-center text-gray-700 bg-white cursor-pointer";
-                btn.innerText = q.id; btn.onclick = () => loadQuestion(idx); grid.appendChild(btn);
-            });
-        }
-
-        function loadQuestion(idx) {
-            currentIdx = idx; const q = questions[idx];
-            questions.forEach((_, i) => {
-                document.getElementById('palette-btn-' + i).className = userResponses[i] !== undefined && userResponses[i] !== "" ? "border font-bold py-2 rounded text-sm text-center bg-indigo-600 border-indigo-600 text-white cursor-pointer" : "border font-bold py-2 rounded text-sm text-center bg-white border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer";
-            });
-            document.getElementById('palette-btn-' + idx).classList.add('ring-2', 'ring-offset-2', 'ring-indigo-500');
-            document.getElementById('section-title').innerText = q.type === "mcq" ? "Section 1: Single Correct Choice Type" : "Section 2: Integral / Numerical Answer Type";
-            document.getElementById('question-number-tag').innerText = `Question ${q.id} of ${questions.length}`;
-            document.getElementById('question-text').innerText = q.text;
-            const optBox = document.getElementById('options-container'); optBox.innerHTML = "";
-
-            if (q.type === "mcq") {
-                const labels = ["(A)", "(B)", "(C)", "(D)"];
-                q.options.forEach((opt, oIdx) => {
-                    const div = document.createElement('div');
-                    div.className = `flex items-center p-3 border rounded-xl cursor-pointer hover:bg-gray-50 ${userResponses[idx] === oIdx ? 'border-indigo-600 bg-indigo-50/50' : 'border-gray-200'}`;
-                    div.onclick = () => { userResponses[idx] = oIdx; loadQuestion(idx); };
-                    div.innerHTML = `<input type="radio" class="h-4 w-4 text-indigo-600" ${userResponses[idx] === oIdx ? 'checked' : ''}><span class="ml-3 font-semibold text-gray-700 mr-2">${labels[oIdx]}</span><span class="text-gray-900 font-medium">${opt}</span>`;
-                    optBox.appendChild(div);
-                });
-            } else {
-                optBox.innerHTML = `<input type="text" id="num-input" value="${userResponses[idx] || ''}" oninput="userResponses[${idx}]=this.value.trim()" class="w-48 px-4 py-3 border-2 border-gray-300 rounded-xl font-mono text-xl" placeholder="e.g. 5">`;
+            // 🛑 CRITICAL INTEGRATION SWITCH: If URL field in spreadsheet is blank, completely dissolve card visibility
+            if (!batchExamUrl || batchExamUrl.trim() === "" || batchExamUrl.indexOf("http") === -1) {
+                document.getElementById('no-exam-card').classList.remove('hidden');
+                return;
             }
-            setupKaTeX();
-        }
 
-        function clearResponse() { delete userResponses[currentIdx]; loadQuestion(currentIdx); }
-        function prevQuestion() { if (currentIdx > 0) loadQuestion(currentIdx - 1); }
-        function nextQuestion() { if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1); }
-        function confirmSubmit() { if (confirm("Are you sure you want to finalize this test?")) evaluateAndDisplayResults(); }
+            document.getElementById('exam-title-display').innerText = batchExamTitle;
+            document.getElementById('active-exam-card').classList.remove('hidden');
 
-        function evaluateAndDisplayResults() {
-            clearInterval(timerInterval);
-            let totalScore = 0, secA = 0, secB = 0, correct = 0, incorrect = 0;
-            questions.forEach((q, idx) => {
-                const response = userResponses[idx]; let questionMarks = 0;
-                if (response !== undefined && response !== "") {
-                    if (q.type === "mcq") {
-                        if (parseInt(response) === q.correct) { questionMarks = 4; correct++; } else { questionMarks = -1; incorrect++; }
-                    } else {
-                        if (response.toString().toLowerCase() === q.correct.toString().toLowerCase()) { questionMarks = 4; correct++; } else { questionMarks = -1; incorrect++; }
-                    }
+            const buttonPlacement = document.getElementById('exam-action-placement');
+            buttonPlacement.innerHTML = `<div class="text-sm font-semibold text-gray-400 py-2 text-center animate-pulse">Running secure system pre-flight attempt verification...</div>`;
+
+            // 🔒 CROSS-VERIFICATION WALL: Hits database to check if student username already submitted a row
+            executeSecureGet({ action: "checkAttempt", username: loggedInUser.username, examName: batchExamTitle }, "handleLockCheck", function(data) {
+                if (data && data.attempted === true) {
+                    buttonPlacement.innerHTML = `<div class="w-full bg-gray-100 text-gray-400 font-bold py-3 rounded-xl text-sm text-center border border-gray-200 select-none cursor-not-allowed">🔒 Attempt Already Submitted</div>`;
+                } else {
+                    buttonPlacement.innerHTML = `<button onclick="launchSecureExamWindow()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md cursor-pointer text-center block">Start Secure Assignment</button>`;
                 }
-                totalScore += questionMarks; if (q.type === "mcq") secA += questionMarks; else secB += questionMarks;
-            });
-
-            document.getElementById('final-score').innerText = totalScore;
-            document.getElementById('final-correct').innerText = correct;
-            document.getElementById('final-incorrect').innerText = incorrect;
-            document.getElementById('test-interface').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-
-            // 🎯 ORIGINAL BULLETPROOF PUSH SETUP
-            fetch(GOOGLE_SHEET_WEBAPP_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    examName: currentExamName,
-                    username: loggedInUser.username,
-                    sectionA: secA,
-                    sectionB: secB,
-                    totalScore: totalScore
-                })
-            })
-            .then(() => {
-                document.getElementById('sheet-status').innerText = "✅ Score metrics synchronized successfully with your Drive folder!";
-                document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
             });
         }
 
-        function returnToDashboard() {
-            document.getElementById('result-screen').classList.add('hidden');
-            document.getElementById('dashboard-screen').classList.remove('hidden');
-            loadPerformanceHistory();
+        function launchSecureExamWindow() {
+            // 🚀 THE ULTIMATE HANDSHAKE STRING ENCODER: Passes username and candidate name quietly inside URL parameters
+            const launchUrl = `${batchExamUrl}?user=${encodeURIComponent(loggedInUser.username)}&name=${encodeURIComponent(loggedInUser.name)}`;
+            
+            // Launch the test in an isolated browser layout context window tabs profile
+            window.open(launchUrl, '_blank', 'noopener,noreferrer');
+            
+            // Force a rapid portal lock layout reload loop switch state so they can't double tap
+            setTimeout(() => { evaluateBatchAssignmentRouting(); }, 3000);
         }
 
         function processLogout() {
             loggedInUser = null;
-            document.getElementById('login-username').value = ""; document.getElementById('login-password').value = "";
+            batchExamTitle = "";
+            batchExamUrl = "";
+            document.getElementById('login-username').value = "";
+            document.getElementById('login-password').value = "";
             document.getElementById('dashboard-screen').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('assignment-loading').classList.remove('hidden');
         }
     </script>
 </body>
