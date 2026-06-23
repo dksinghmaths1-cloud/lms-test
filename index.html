@@ -3,198 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mathematics by D.K. Singh - Student Portal Dashboard</title>
+    <title>Student Examination Portal - Lobby Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800">
+<body class="bg-gray-50 font-sans text-gray-800">
 
-    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 px-4">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full text-center border border-gray-100">
-            <h1 class="text-2xl font-black text-gray-900 tracking-tight">Mathematics by D.K. Singh</h1>
-            <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-1">🎯 Unified Student Portal</p>
+    <div class="min-h-screen flex flex-col justify-between">
+        
+        <!-- 🌐 MAIN LOBBY NAVIGATION CONTAINER -->
+        <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center">
             
-            <div id="login-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl font-medium">
-                ❌ Invalid Batch Username or Password Match.
-            </div>
-
-            <div class="mt-6 space-y-3.5 text-left">
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Batch Account Username:</label>
-                    <input type="text" id="login-username" placeholder="e.g. 11_rahul or 12_priya" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password:</label>
-                    <input type="password" id="login-password" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                </div>
-            </div>
-            
-            <button onclick="processLogin()" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl mt-6 transition shadow-md cursor-pointer text-center">
-                Secure Log In
-            </button>
-        </div>
-    </div>
-
-    <div id="dashboard-screen" class="hidden min-h-screen flex flex-col">
-        <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
-            <div>
-                <h1 class="text-xl font-black text-gray-900 tracking-tight">STUDENT ACCOUNT PANEL</h1>
-                <p class="text-sm text-gray-500 font-medium">Welcome back, <span id="user-display-name" class="text-indigo-600 font-bold">Student</span></p>
-            </div>
-            <button onclick="processLogout()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded-xl border border-gray-200 transition text-sm cursor-pointer">
-                Log Out
-            </button>
-        </header>
-
-        <main class="flex-1 p-6 max-w-2xl mx-auto w-full space-y-6">
-            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📝 Your Active Batch Assignment</h3>
+            <!-- 🔑 GATEWAY 1: STUDENT GATEWAY LOGIN CARD -->
+            <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-md w-full text-center">
+                <h1 class="text-2xl font-black tracking-tight text-gray-900">MATHEMATICS BY D.K. SINGH</h1>
+                <p class="text-sm font-bold text-indigo-600 uppercase tracking-wider mt-1">Student Evaluation Portal</p>
                 
-                <div id="assignment-loading" class="text-center py-6 text-gray-400 font-medium">
-                    🔍 Fetching your specific batch scheduling rules...
-                </div>
-
-                <div id="active-exam-card" class="hidden p-5 border border-indigo-100 bg-indigo-50/40 rounded-2xl flex flex-col gap-3">
+                <div class="mt-6 space-y-4 text-left">
                     <div>
-                        <div id="exam-title-display" class="font-black text-gray-900 text-lg tracking-tight">Active Test Title</div>
-                        <p class="text-xs font-semibold text-indigo-600 mt-0.5 uppercase tracking-wider">🔒 FULL SECURITY ANTI-CHEAT ACTIVE</p>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Account Username:</label>
+                        <input type="text" id="username-field" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-indigo-600 transition font-medium" placeholder="e.g. 11_arnav">
                     </div>
-                    <div class="text-xs text-gray-500 leading-relaxed bg-white border border-gray-100 p-3 rounded-xl font-medium">
-                        ⚠️ Clicking the button below will open your exam page. Your session will be invigilated. Tab-switching or minimizing the screen will cause an immediate session lock.
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Security Password:</label>
+                        <input type="password" id="password-field" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-indigo-600 transition font-medium" placeholder="••••••••">
                     </div>
-                    <div id="exam-action-placement"></div>
-                </div>
-
-                <div id="no-exam-card" class="hidden text-center py-8 px-4 border border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
-                    <span class="text-3xl block mb-2">🎯</span>
-                    <div class="font-bold text-gray-800 text-base">No Active Exams Scheduled</div>
-                    <p class="text-xs text-gray-400 font-medium mt-1">There are no assignments currently live for your batch matrix.</p>
+                    <button onclick="attemptAuthentication()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition cursor-pointer shadow-md mt-2">
+                        Sign In to Account
+                    </button>
                 </div>
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-wider border-b border-gray-100 pb-2 mb-4">📊 Past Examination Records History</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="border-b border-gray-200 text-gray-400 text-xs uppercase tracking-wider">
-                                <th class="py-3 px-2">Exam Title Reference</th>
-                                <th class="py-3 px-2 text-center">Sec. A</th>
-                                <th class="py-3 px-2 text-center">Sec. B</th>
-                                <th class="py-3 px-2 text-right">Final Marks</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-rows-container">
+            <!-- 📊 GATEWAY 2: LIVE STUDENT METRICS DASHBOARD -->
+            <div id="dashboard" class="hidden w-full space-y-6">
+                
+                <!-- Welcome Profile Banner Header -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-gray-900">Welcome back, <span id="student-name" class="text-indigo-600">Student</span>!</h2>
+                        <p class="text-sm font-medium text-gray-500">Account Username: <span id="student-username" class="font-bold text-gray-700"></span></p>
+                    </div>
+                    <button onclick="window.location.reload()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold px-4 py-2 rounded-lg transition border border-gray-200 cursor-pointer">
+                        Sign Out / Exit
+                    </button>
+                </div>
+
+                <!-- Active Scheduled Examination Card Launcher -->
+                <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-indigo-300">Active Examination Status</span>
+                    </div>
+                    <h3 id="exam-title" class="text-xl font-extrabold mt-2 tracking-tight">Checking for live papers scheduled...</h3>
+                    <div class="mt-5">
+                        <a id="action-btn" href="#" class="w-full bg-gray-700 text-gray-400 font-bold py-3 px-4 rounded-xl text-center block cursor-not-allowed shadow-md transition">
+                            Lobby Syncing...
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Historical Performance Log Metrics Table Panel -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                        <h4 class="font-black text-gray-900 text-sm uppercase tracking-wide">Historical Examination Scoresheet</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                                    <th class="px-4 py-3">Exam Paper Title</th>
+                                    <th class="px-4 py-3">Sectional Matrix Breakdown</th>
+                                    <th class="px-4 py-3 text-right">Total Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-body" class="text-sm divide-y divide-gray-100 font-medium">
+                                <tr>
+                                    <td colspan="3" class="px-4 py-8 text-center text-gray-400">Loading your profile ledger history...</td>
+                                </tr>
                             </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
+
             </div>
+
         </main>
     </div>
 
     <script>
+        // ==========================================
+        // ⚙️ GLOBAL ENDPOINT WEBAPP GATEWAY URL
+        // ==========================================
         const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
-        
-        let loggedInUser = null;
-        let batchExamTitle = "";
-        let batchExamUrl = "";
+        const urlParams = new URLSearchParams(window.location.search);
 
-        function executeSecureGet(params, callbackName, callbackFn) {
+        // Pre-fill fields if params exist in the URL browser line
+        if (urlParams.get('user')) document.getElementById('username-field').value = urlParams.get('user');
+        if (urlParams.get('pass')) {
+            document.getElementById('password-field').value = urlParams.get('pass');
+            attemptAuthentication(); // Auto login fluidly
+        }
+
+        function attemptAuthentication() {
+            const userVal = document.getElementById('username-field').value.trim().toLowerCase();
+            const passVal = document.getElementById('password-field').value.trim();
+
+            if (!userVal || !passVal) {
+                alert("Please complete both login verification profile fields.");
+                return;
+            }
+
+            // Sync clean URL params for tracking stability
+            urlParams.set('user', userVal);
+            urlParams.set('pass', passVal);
+            window.history.replaceState({}, '', '?' + urlParams.toString());
+
+            executeSecureJSONP({
+                action: "login",
+                username: userVal,
+                password: passVal
+            }, "handleLoginResponse");
+        }
+
+        function executeSecureJSONP(params, callbackName) {
             const script = document.createElement('script');
-            window[callbackName] = function(data) { callbackFn(data); script.remove(); delete window[callbackName]; };
-            let queryString = Object.keys(params).map(key => key + '=' + encodeURIComponent(params[key])).join('&');
+            let queryString = Object.keys(params).map(k => k + '=' + encodeURIComponent(params[k])).join('&');
             script.src = GOOGLE_SHEET_WEBAPP_URL + "?" + queryString + "&callback=" + callbackName + "&ts=" + new Date().getTime();
             document.body.appendChild(script);
         }
 
-        function processLogin() {
-            const user = document.getElementById('login-username').value.trim();
-            const pass = document.getElementById('login-password').value.trim();
-            document.getElementById('login-error').classList.add('hidden');
-
-            if (!user || !pass) return;
-            document.getElementById('login-btn').innerText = "Verifying Credentials...";
-            
-            executeSecureGet({ action: "login", username: user, password: pass }, "handleLogin", function(data) {
-                document.getElementById('login-btn').innerText = "Secure Log In";
-                if(data && data.status === "success") {
-                    loggedInUser = { username: user, name: data.user.name };
-                    batchExamTitle = data.examTitle;
-                    batchExamUrl = data.examUrl;
-
-                    document.getElementById('user-display-name').innerText = `${data.user.name} (Batch ${data.batch})`;
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('dashboard-screen').classList.remove('hidden');
-                    
-                    evaluateBatchAssignmentRouting();
-                    populateHistoricalScoreTable(data.history || []);
+        // ==========================================
+        // 📊 THE 5-SECTION BUG-FIXED AUTH LOGIC ENGINE
+        // ==========================================
+        function handleLoginResponse(data) {
+            if (data.status === "success") {
+                document.getElementById('login-card').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                
+                document.getElementById('student-name').innerText = data.user.name;
+                document.getElementById('student-username').innerText = urlParams.get('user') || "";
+                
+                const actionBtn = document.getElementById('action-btn');
+                if (data.examTitle && data.examUrl) {
+                    document.getElementById('exam-title').innerText = data.examTitle;
+                    actionBtn.innerText = `Launch ${data.examTitle}`;
+                    actionBtn.disabled = false;
+                    actionBtn.className = "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-md text-center block font-semibold text-lg";
+                    actionBtn.href = `${data.examUrl}?user=${encodeURIComponent(urlParams.get('user'))}&name=${encodeURIComponent(data.user.name)}`;
                 } else {
-                    document.getElementById('login-error').classList.remove('hidden');
+                    document.getElementById('exam-title').innerText = "No active exam scheduled currently.";
+                    actionBtn.innerText = "Lobby Paused";
+                    actionBtn.disabled = true;
+                    actionBtn.className = "w-full bg-gray-200 text-gray-400 font-bold py-3 px-4 rounded-xl cursor-not-allowed text-center block";
                 }
-            });
-        }
+                
+                const historyBody = document.getElementById('history-body');
+                historyBody.innerHTML = "";
+                
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
+                        
+                        // Always display Section A and Section B tags
+                        let sectionBreakdownHTML = `
+                            <span class="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">A: ${row.sectionA}</span>
+                            <span class="inline-block bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">B: ${row.sectionB}</span>
+                        `;
+                        
+                        // 🔍 FIXED LOGIC RULE: Check for any valid data entries including zero or negative values!
+                        // This prevents missing columns from collapsing section views unexpectedly.
+                        if (row.sectionC !== undefined && row.sectionC !== null && row.sectionC !== "") {
+                            sectionBreakdownHTML += `<span class="inline-block bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">C: ${row.sectionC}</span>`;
+                        }
+                        if (row.sectionD !== undefined && row.sectionD !== null && row.sectionD !== "") {
+                            sectionBreakdownHTML += `<span class="inline-block bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">D: ${row.sectionD}</span>`;
+                        }
+                        if (row.sectionE !== undefined && row.sectionE !== null && row.sectionE !== "") {
+                            sectionBreakdownHTML += `<span class="inline-block bg-rose-50 text-rose-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">E: ${row.sectionE}</span>`;
+                        }
 
-        function evaluateBatchAssignmentRouting() {
-            document.getElementById('assignment-loading').classList.add('hidden');
-            document.getElementById('active-exam-card').classList.add('hidden');
-            document.getElementById('no-exam-card').classList.add('hidden');
-
-            if (!batchExamUrl || batchExamUrl.trim() === "" || batchExamUrl.indexOf("http") === -1) {
-                document.getElementById('no-exam-card').classList.remove('hidden');
-                return;
-            }
-
-            document.getElementById('exam-title-display').innerText = batchExamTitle;
-            document.getElementById('active-exam-card').classList.remove('hidden');
-
-            const buttonPlacement = document.getElementById('exam-action-placement');
-            buttonPlacement.innerHTML = `<div class="text-sm font-semibold text-gray-400 py-2 text-center animate-pulse">Running secure system pre-flight attempt verification...</div>`;
-
-            executeSecureGet({ action: "checkAttempt", username: loggedInUser.username, examName: batchExamTitle }, "handleLockCheck", function(data) {
-                if (data && data.attempted === true) {
-                    buttonPlacement.innerHTML = `<div class="w-full bg-gray-100 text-gray-400 font-bold py-3 rounded-xl text-sm text-center border border-gray-200 select-none cursor-not-allowed">🔒 Attempt Already Submitted</div>`;
+                        tr.innerHTML = `
+                            <td class="px-4 py-3.5 font-bold text-gray-900">${row.examName}</td>
+                            <td class="px-4 py-3.5">${sectionBreakdownHTML}</td>
+                            <td class="px-4 py-3.5 text-right"><span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-full text-sm font-mono">${row.totalScore}</span></td>
+                        `;
+                        historyBody.appendChild(tr);
+                    });
                 } else {
-                    buttonPlacement.innerHTML = `<button onclick="launchSecureExamWindow()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md cursor-pointer text-center block">Start Secure Assignment</button>`;
+                    historyBody.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-sm text-gray-400 font-medium">No historical exam logs discovered for this profile account.</td></tr>`;
                 }
-            });
-        }
-
-        function populateHistoricalScoreTable(logs) {
-            const container = document.getElementById('history-rows-container');
-            container.innerHTML = "";
-            
-            if (logs.length === 0) {
-                container.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400 font-medium text-xs">No previous test attempt sheets found for this account identity.</td></tr>`;
-                return;
+            } else {
+                alert("Authentication handshaking failed. Please re-verify security credentials.");
             }
-            
-            logs.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-gray-100 text-gray-700 font-medium hover:bg-gray-50/50 transition";
-                tr.innerHTML = `
-                    <td class="py-3.5 px-2 font-bold text-gray-900">${row.examName}</td>
-                    <td class="py-3.5 px-2 text-center text-gray-500">${row.sectionA}</td>
-                    <td class="py-3.5 px-2 text-center text-gray-500">${row.sectionB}</td>
-                    <td class="py-3.5 px-2 text-right font-black text-indigo-600 text-base">${row.totalScore}</td>
-                `;
-                container.appendChild(tr);
-            });
-        }
-
-        function launchSecureExamWindow() {
-            const launchUrl = `${batchExamUrl}?user=${encodeURIComponent(loggedInUser.username)}&name=${encodeURIComponent(loggedInUser.name)}`;
-            window.open(launchUrl, '_blank', 'noopener,noreferrer');
-            setTimeout(() => { evaluateBatchAssignmentRouting(); }, 3000);
-        }
-
-        function processLogout() {
-            loggedInUser = null;
-            batchExamTitle = "";
-            batchExamUrl = "";
-            document.getElementById('login-username').value = "";
-            document.getElementById('login-password').value = "";
-            document.getElementById('dashboard-screen').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('assignment-loading').classList.remove('hidden');
         }
     </script>
 </body>
