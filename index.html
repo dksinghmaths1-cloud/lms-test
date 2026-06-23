@@ -3,96 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Examination Portal - Lobby Hub</title>
+    <title>Mathematics by D.K. Singh - Student Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-slate-950 font-sans text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white">
 
-    <div class="min-h-screen flex flex-col justify-between">
-        
-        <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center">
+    <div id="login-card" class="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-indigo-950 to-slate-950 px-4">
+        <div class="bg-slate-900/60 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-slate-800/80 ring-1 ring-white/5">
+            <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center text-2xl font-black text-white mx-auto shadow-lg shadow-indigo-500/20 mb-5">
+                ∑
+            </div>
+            <h1 class="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">MATHEMATICS BY D.K. SINGH</h1>
+            <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest mt-1.5">🎯 Advanced Testing Ecosystem</p>
             
-            <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-md w-full text-center">
-                <h1 class="text-2xl font-black tracking-tight text-gray-900">MATHEMATICS BY D.K. SINGH</h1>
-                <p class="text-sm font-bold text-indigo-600 uppercase tracking-wider mt-1">Student Evaluation Portal</p>
+            <div id="login-error" class="hidden mt-5 p-3 bg-red-950/50 border border-red-800/50 text-red-400 text-xs rounded-xl font-semibold">
+                ❌ Invalid Username or Password Combination.
+            </div>
+
+            <div class="mt-6 space-y-4 text-left">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Portal Account Username:</label>
+                    <input type="text" id="username-field" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition font-medium text-slate-200 placeholder-slate-600" placeholder="e.g. 11_arnav">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Security Access Password:</label>
+                    <input type="password" id="password-field" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition font-medium text-slate-200 placeholder-slate-600" placeholder="••••••••">
+                </div>
+                <button onclick="attemptAuthentication()" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.99] mt-2 cursor-pointer text-center">
+                    Authenticate Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden min-h-screen flex flex-col">
+        
+        <header class="bg-slate-900/40 backdrop-blur-md border-b border-slate-900 px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center font-black text-lg">∫</div>
+                <div>
+                    <h2 class="text-lg font-black text-white tracking-tight">STUDENT ACCOUNT PANEL</h2>
+                    <p class="text-xs font-semibold text-slate-400">Welcome back, <span id="student-name" class="text-indigo-400 font-bold">Student</span> (<span id="student-username" class="text-slate-300 font-mono"></span>)</p>
+                </div>
+            </div>
+            <button onclick="window.location.reload()" class="text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold px-4 py-2.5 rounded-xl transition border border-slate-800 active:scale-95 cursor-pointer">
+                Log Out Terminal
+            </button>
+        </header>
+
+        <main class="flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 space-y-6">
+            
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 p-6 rounded-2xl border border-slate-900 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <div class="mt-6 space-y-4 text-left">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Account Username:</label>
-                        <input type="text" id="username-field" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-indigo-600 transition font-medium" placeholder="e.g. 11_arnav">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-sm shadow-emerald-400"></span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-indigo-400">Assignment Stream Status</span>
+                </div>
+                
+                <h3 id="exam-title" class="text-xl font-black mt-2 tracking-tight text-white">Syncing current batch matrix rules...</h3>
+                <p id="exam-warning" class="hidden text-xs text-slate-400 leading-relaxed bg-slate-950/60 border border-slate-900 p-3 rounded-xl mt-3 font-medium">
+                    ⚠️ <strong>SECURITY RULES ACTIVE:</strong> This test window is fully monitored. Minimizing your browser layout or toggling tabs will cause immediate session freezing requiring pin unlock.
+                </p>
+                
+                <div class="mt-5" id="action-container">
+                    <div class="w-full bg-slate-900 border border-slate-800 text-slate-500 font-bold py-3.5 rounded-xl text-center text-sm animate-pulse">
+                        Evaluating parameters...
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Security Password:</label>
-                        <input type="password" id="password-field" class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-indigo-600 transition font-medium" placeholder="••••••••">
-                    </div>
-                    <button onclick="attemptAuthentication()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition cursor-pointer shadow-md mt-2">
-                        Sign In to Account
-                    </button>
                 </div>
             </div>
 
-            <div id="dashboard" class="hidden w-full space-y-6">
+            <div class="bg-slate-900/30 border border-slate-900 rounded-2xl shadow-xl overflow-hidden">
+                <div class="px-5 py-4 border-b border-slate-900/60 bg-slate-900/50 flex justify-between items-center">
+                    <h4 class="font-black text-slate-300 text-xs uppercase tracking-wider">Historical Performance Index</h4>
+                    <span class="text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold px-2 py-0.5 rounded-md">Live Sync</span>
+                </div>
                 
-                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h2 class="text-2xl font-black text-gray-900">Welcome back, <span id="student-name" class="text-indigo-600">Student</span>!</h2>
-                        <p class="text-sm font-medium text-gray-500">Account Username: <span id="student-username" class="font-bold text-gray-700"></span></p>
-                    </div>
-                    <button onclick="window.location.reload()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold px-4 py-2 rounded-lg transition border border-gray-200 cursor-pointer">
-                        Sign Out / Exit
-                    </button>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/20 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-900">
+                                <th class="px-5 py-3">Examination Reference</th>
+                                <th class="px-5 py-3">Section Analytics</th>
+                                <th class="px-5 py-3 text-right">Final Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body" class="text-sm divide-y divide-slate-900/50 font-medium text-slate-300">
+                            <tr>
+                                <td colspan="3" class="px-5 py-8 text-center text-xs text-slate-600 font-medium tracking-wide">Syncing account database records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                        <span class="text-xs font-bold uppercase tracking-widest text-indigo-300">Active Examination Status</span>
-                    </div>
-                    <h3 id="exam-title" class="text-xl font-extrabold mt-2 tracking-tight">Checking for live papers scheduled...</h3>
-                    <div class="mt-5" id="action-btn-container">
-                        <a id="action-btn" href="#" class="w-full bg-gray-700 text-gray-400 font-bold py-3 px-4 rounded-xl text-center block cursor-not-allowed shadow-md transition">
-                            Lobby Syncing...
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-                        <h4 class="font-black text-gray-900 text-sm uppercase tracking-wide">Historical Examination Scoresheet</h4>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                                    <th class="px-4 py-3">Exam Paper Title</th>
-                                    <th class="px-4 py-3">Sectional Matrix Breakdown</th>
-                                    <th class="px-4 py-3 text-right">Total Score</th>
-                                </tr>
-                            </thead>
-                            <tbody id="history-body" class="text-sm divide-y divide-gray-100 font-medium">
-                                <tr>
-                                    <td colspan="3" class="px-4 py-8 text-center text-gray-400">Loading your profile ledger history...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
 
         </main>
     </div>
 
     <script>
-        // ==========================================
-        // ⚙️ GLOBAL ENDPOINT WEBAPP GATEWAY URL
-        // ==========================================
         const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
         const urlParams = new URLSearchParams(window.location.search);
-
-        let globalUser = "";
-        let globalName = "";
-        let globalExamUrl = "";
 
         if (urlParams.get('user')) document.getElementById('username-field').value = urlParams.get('user');
         if (urlParams.get('pass')) {
@@ -104,20 +114,16 @@
             const userVal = document.getElementById('username-field').value.trim().toLowerCase();
             const passVal = document.getElementById('password-field').value.trim();
 
-            if (!userVal || !passVal) {
-                alert("Please complete both login verification profile fields.");
-                return;
-            }
+            if (!userVal || !passVal) return;
+
+            document.getElementById('login-btn').innerText = "Verifying Sign In...";
+            document.getElementById('login-error').classList.add('hidden');
 
             urlParams.set('user', userVal);
             urlParams.set('pass', passVal);
             window.history.replaceState({}, '', '?' + urlParams.toString());
 
-            executeSecureJSONP({
-                action: "login",
-                username: userVal,
-                password: passVal
-            }, "handleLoginResponse");
+            executeSecureJSONP({ action: "login", username: userVal, password: passVal }, "handleLoginResponse");
         }
 
         function executeSecureJSONP(params, callbackName) {
@@ -127,10 +133,9 @@
             document.body.appendChild(script);
         }
 
-        // ==========================================
-        // 📊 THE 5-SECTION AUTH LOGIC ENGINE WITH LIVE DASHBOARD LOCK
-        // ==========================================
         function handleLoginResponse(data) {
+            document.getElementById('login-btn').innerText = "Authenticate Session";
+            
             if (data.status === "success") {
                 document.getElementById('login-card').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
@@ -138,86 +143,72 @@
                 document.getElementById('student-name').innerText = data.user.name;
                 document.getElementById('student-username').innerText = urlParams.get('user') || "";
                 
-                globalUser = urlParams.get('user') || "";
-                globalName = data.user.name;
-                globalExamUrl = data.examUrl;
-
+                const actionContainer = document.getElementById('action-container');
+                
                 if (data.examTitle && data.examUrl) {
                     document.getElementById('exam-title').innerText = data.examTitle;
+                    document.getElementById('exam-warning').classList.remove('hidden');
                     
-                    // 🔒 DASHBOARD PRE-FLIGHT LOCK ROUTINE TRIGGER
-                    executeSecureJSONP({ 
-                        action: "checkAttempt", 
-                        username: globalUser, 
-                        examName: data.examTitle 
-                    }, "handleDashboardLockCheck");
+                    // 🔒 RESTORED & DYNAMIC LOBBY EMBEDDED LOCKOUT PRE-FLIGHT CHECK
+                    actionContainer.innerHTML = `<div class="w-full bg-slate-900 border border-slate-800 text-slate-500 font-bold py-3.5 rounded-xl text-center text-sm animate-pulse">Running security access pre-check...</div>`;
                     
+                    executeSecureJSONP({ action: "checkAttempt", username: urlParams.get('user').trim().toLowerCase(), examName: data.examTitle }, "handleLobbyLockCheck");
+                    
+                    // Put global reference placeholders for step logic tracking
+                    window.currentExamUrl = data.examUrl;
+                    window.currentExamName = data.user.name;
                 } else {
-                    document.getElementById('exam-title').innerText = "No active exam scheduled currently.";
-                    document.getElementById('action-btn-container').innerHTML = `
-                        <a id="action-btn" href="#" class="w-full bg-gray-200 text-gray-400 font-bold py-3 px-4 rounded-xl text-center block cursor-not-allowed">
-                            Lobby Paused
-                        </a>`;
+                    document.getElementById('exam-title').innerText = "No active examinations scheduled.";
+                    document.getElementById('exam-warning').classList.add('hidden');
+                    actionContainer.innerHTML = `<div class="w-full bg-slate-900 border border-slate-800 text-slate-600 font-black py-3.5 rounded-xl text-center text-sm uppercase tracking-wider select-none">No Live Paper Assignments</div>`;
                 }
                 
+                // Render Historical Logs
                 const historyBody = document.getElementById('history-body');
                 historyBody.innerHTML = "";
                 
                 if (data.history && data.history.length > 0) {
                     data.history.forEach(row => {
                         const tr = document.createElement('tr');
-                        tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
+                        tr.className = "border-b border-slate-900/40 hover:bg-slate-900/20 transition duration-150";
                         
                         let sectionBreakdownHTML = `
-                            <span class="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">A: ${row.sectionA}</span>
-                            <span class="inline-block bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">B: ${row.sectionB}</span>
+                            <span class="inline-block bg-blue-950 text-blue-400 border border-blue-900/50 text-[10px] font-black px-2 py-0.5 rounded-md font-mono m-0.5">A: ${row.sectionA}</span>
+                            <span class="inline-block bg-purple-950 text-purple-400 border border-purple-900/50 text-[10px] font-black px-2 py-0.5 rounded-md font-mono m-0.5">B: ${row.sectionB}</span>
                         `;
                         
                         if (row.sectionC !== undefined && row.sectionC !== null && row.sectionC !== "") {
-                            sectionBreakdownHTML += `<span class="inline-block bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">C: ${row.sectionC}</span>`;
+                            sectionBreakdownHTML += `<span class="inline-block bg-emerald-950 text-emerald-400 border border-emerald-900/50 text-[10px] font-black px-2 py-0.5 rounded-md font-mono m-0.5">C: ${row.sectionC}</span>`;
                         }
                         if (row.sectionD !== undefined && row.sectionD !== null && row.sectionD !== "") {
-                            sectionBreakdownHTML += `<span class="inline-block bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">D: ${row.sectionD}</span>`;
+                            sectionBreakdownHTML += `<span class="inline-block bg-amber-950 text-amber-400 border border-amber-900/50 text-[10px] font-black px-2 py-0.5 rounded-md font-mono m-0.5">D: ${row.sectionD}</span>`;
                         }
                         if (row.sectionE !== undefined && row.sectionE !== null && row.sectionE !== "") {
-                            sectionBreakdownHTML += `<span class="inline-block bg-rose-50 text-rose-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">E: ${row.sectionE}</span>`;
+                            sectionBreakdownHTML += `<span class="inline-block bg-rose-950 text-rose-400 border border-rose-900/50 text-[10px] font-black px-2 py-0.5 rounded-md font-mono m-0.5">E: ${row.sectionE}</span>`;
                         }
 
                         tr.innerHTML = `
-                            <td class="px-4 py-3.5 font-bold text-gray-900">${row.examName}</td>
-                            <td class="px-4 py-3.5">${sectionBreakdownHTML}</td>
-                            <td class="px-4 py-3.5 text-right"><span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-full text-sm font-mono">${row.totalScore}</span></td>
+                            <td class="px-5 py-4 font-black text-slate-100">${row.examName}</td>
+                            <td class="px-5 py-4">${sectionBreakdownHTML}</td>
+                            <td class="px-5 py-4 text-right"><span class="bg-indigo-600 text-white font-black px-3 py-1 rounded-xl text-xs font-mono shadow-md shadow-indigo-600/10">${row.totalScore}</span></td>
                         `;
                         historyBody.appendChild(tr);
                     });
                 } else {
-                    historyBody.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-sm text-gray-400 font-medium">No historical exam logs discovered for this profile account.</td></tr>`;
+                    historyBody.innerHTML = `<tr><td colspan="3" class="px-5 py-8 text-center text-xs text-slate-600 font-bold tracking-wide">No historical evaluation metrics records found on file.</td></tr>`;
                 }
             } else {
-                alert("Authentication handshaking failed. Please re-verify security credentials.");
+                document.getElementById('login-error').classList.remove('hidden');
             }
         }
 
-        // ==========================================
-        // 🛡️ DYNAMIC LIVE CONTAINER REFLECTION KEY
-        // ==========================================
-        function handleDashboardLockCheck(data) {
-            const container = document.getElementById('action-btn-container');
-            const currentTitle = document.getElementById('exam-title').innerText;
-
+        // Handles rendering the block directly into the dashboard element layout
+        function handleLobbyLockCheck(data) {
+            const actionContainer = document.getElementById('action-container');
             if (data && data.attempted === true) {
-                // Instantly swap container to lock mode using gray color scheme if already submitted
-                container.innerHTML = `
-                    <div class="w-full bg-slate-800 text-slate-500 border border-slate-700 font-bold py-3 px-4 rounded-xl text-center select-none cursor-not-allowed">
-                        🔒 Attempt Already Submitted
-                    </div>`;
+                actionContainer.innerHTML = `<div class="w-full bg-slate-900 border border-red-950/60 text-red-400 font-black py-4 rounded-xl text-xs text-center uppercase tracking-widest select-none border-dashed">🔒 Attempt Already Logged & Locked</div>`;
             } else {
-                // Otherwise reveal the pristine launch button design fluidly
-                container.innerHTML = `
-                    <a id="action-btn" href="${globalExamUrl}?user=${encodeURIComponent(globalUser)}&name=${encodeURIComponent(globalName)}" 
-                       class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-md text-center block font-semibold text-lg">
-                        Launch ${currentTitle}
-                    </a>`;
+                actionContainer.innerHTML = `<a href="${window.currentExamUrl}?user=${encodeURIComponent(urlParams.get('user'))}&name=${encodeURIComponent(window.currentExamName)}" target="_blank" onclick="setTimeout(()=>window.location.reload(),2000)" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-black py-4 rounded-xl text-sm text-center block shadow-lg shadow-indigo-600/10 transition-all transform active:scale-[0.99] cursor-pointer tracking-wide">Launch Secure Examination Terminal</a>`;
             }
         }
     </script>
