@@ -10,10 +10,8 @@
 
     <div class="min-h-screen flex flex-col justify-between">
         
-        <!-- 🌐 MAIN LOBBY NAVIGATION CONTAINER -->
         <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center">
             
-            <!-- 🔑 GATEWAY 1: STUDENT GATEWAY LOGIN CARD -->
             <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-md w-full text-center">
                 <h1 class="text-2xl font-black tracking-tight text-gray-900">MATHEMATICS BY D.K. SINGH</h1>
                 <p class="text-sm font-bold text-indigo-600 uppercase tracking-wider mt-1">Student Evaluation Portal</p>
@@ -33,10 +31,8 @@
                 </div>
             </div>
 
-            <!-- 📊 GATEWAY 2: LIVE STUDENT METRICS DASHBOARD -->
             <div id="dashboard" class="hidden w-full space-y-6">
                 
-                <!-- Welcome Profile Banner Header -->
                 <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-2xl font-black text-gray-900">Welcome back, <span id="student-name" class="text-indigo-600">Student</span>!</h2>
@@ -47,21 +43,19 @@
                     </button>
                 </div>
 
-                <!-- Active Scheduled Examination Card Launcher -->
                 <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
                         <span class="text-xs font-bold uppercase tracking-widest text-indigo-300">Active Examination Status</span>
                     </div>
                     <h3 id="exam-title" class="text-xl font-extrabold mt-2 tracking-tight">Checking for live papers scheduled...</h3>
-                    <div class="mt-5">
+                    <div class="mt-5" id="action-btn-container">
                         <a id="action-btn" href="#" class="w-full bg-gray-700 text-gray-400 font-bold py-3 px-4 rounded-xl text-center block cursor-not-allowed shadow-md transition">
                             Lobby Syncing...
                         </a>
                     </div>
                 </div>
 
-                <!-- Historical Performance Log Metrics Table Panel -->
                 <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
                         <h4 class="font-black text-gray-900 text-sm uppercase tracking-wide">Historical Examination Scoresheet</h4>
@@ -96,11 +90,14 @@
         const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
         const urlParams = new URLSearchParams(window.location.search);
 
-        // Pre-fill fields if params exist in the URL browser line
+        let globalUser = "";
+        let globalName = "";
+        let globalExamUrl = "";
+
         if (urlParams.get('user')) document.getElementById('username-field').value = urlParams.get('user');
         if (urlParams.get('pass')) {
             document.getElementById('password-field').value = urlParams.get('pass');
-            attemptAuthentication(); // Auto login fluidly
+            attemptAuthentication();
         }
 
         function attemptAuthentication() {
@@ -112,7 +109,6 @@
                 return;
             }
 
-            // Sync clean URL params for tracking stability
             urlParams.set('user', userVal);
             urlParams.set('pass', passVal);
             window.history.replaceState({}, '', '?' + urlParams.toString());
@@ -132,7 +128,7 @@
         }
 
         // ==========================================
-        // 📊 THE 5-SECTION BUG-FIXED AUTH LOGIC ENGINE
+        // 📊 THE 5-SECTION AUTH LOGIC ENGINE WITH LIVE DASHBOARD LOCK
         // ==========================================
         function handleLoginResponse(data) {
             if (data.status === "success") {
@@ -142,18 +138,26 @@
                 document.getElementById('student-name').innerText = data.user.name;
                 document.getElementById('student-username').innerText = urlParams.get('user') || "";
                 
-                const actionBtn = document.getElementById('action-btn');
+                globalUser = urlParams.get('user') || "";
+                globalName = data.user.name;
+                globalExamUrl = data.examUrl;
+
                 if (data.examTitle && data.examUrl) {
                     document.getElementById('exam-title').innerText = data.examTitle;
-                    actionBtn.innerText = `Launch ${data.examTitle}`;
-                    actionBtn.disabled = false;
-                    actionBtn.className = "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-md text-center block font-semibold text-lg";
-                    actionBtn.href = `${data.examUrl}?user=${encodeURIComponent(urlParams.get('user'))}&name=${encodeURIComponent(data.user.name)}`;
+                    
+                    // 🔒 DASHBOARD PRE-FLIGHT LOCK ROUTINE TRIGGER
+                    executeSecureJSONP({ 
+                        action: "checkAttempt", 
+                        username: globalUser, 
+                        examName: data.examTitle 
+                    }, "handleDashboardLockCheck");
+                    
                 } else {
                     document.getElementById('exam-title').innerText = "No active exam scheduled currently.";
-                    actionBtn.innerText = "Lobby Paused";
-                    actionBtn.disabled = true;
-                    actionBtn.className = "w-full bg-gray-200 text-gray-400 font-bold py-3 px-4 rounded-xl cursor-not-allowed text-center block";
+                    document.getElementById('action-btn-container').innerHTML = `
+                        <a id="action-btn" href="#" class="w-full bg-gray-200 text-gray-400 font-bold py-3 px-4 rounded-xl text-center block cursor-not-allowed">
+                            Lobby Paused
+                        </a>`;
                 }
                 
                 const historyBody = document.getElementById('history-body');
@@ -164,14 +168,11 @@
                         const tr = document.createElement('tr');
                         tr.className = "border-b border-gray-100 hover:bg-gray-50/50 transition";
                         
-                        // Always display Section A and Section B tags
                         let sectionBreakdownHTML = `
                             <span class="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">A: ${row.sectionA}</span>
                             <span class="inline-block bg-purple-50 text-purple-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">B: ${row.sectionB}</span>
                         `;
                         
-                        // 🔍 FIXED LOGIC RULE: Check for any valid data entries including zero or negative values!
-                        // This prevents missing columns from collapsing section views unexpectedly.
                         if (row.sectionC !== undefined && row.sectionC !== null && row.sectionC !== "") {
                             sectionBreakdownHTML += `<span class="inline-block bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded font-mono m-0.5">C: ${row.sectionC}</span>`;
                         }
@@ -194,6 +195,29 @@
                 }
             } else {
                 alert("Authentication handshaking failed. Please re-verify security credentials.");
+            }
+        }
+
+        // ==========================================
+        // 🛡️ DYNAMIC LIVE CONTAINER REFLECTION KEY
+        // ==========================================
+        function handleDashboardLockCheck(data) {
+            const container = document.getElementById('action-btn-container');
+            const currentTitle = document.getElementById('exam-title').innerText;
+
+            if (data && data.attempted === true) {
+                // Instantly swap container to lock mode using gray color scheme if already submitted
+                container.innerHTML = `
+                    <div class="w-full bg-slate-800 text-slate-500 border border-slate-700 font-bold py-3 px-4 rounded-xl text-center select-none cursor-not-allowed">
+                        🔒 Attempt Already Submitted
+                    </div>`;
+            } else {
+                // Otherwise reveal the pristine launch button design fluidly
+                container.innerHTML = `
+                    <a id="action-btn" href="${globalExamUrl}?user=${encodeURIComponent(globalUser)}&name=${encodeURIComponent(globalName)}" 
+                       class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-md text-center block font-semibold text-lg">
+                        Launch ${currentTitle}
+                    </a>`;
             }
         }
     </script>
