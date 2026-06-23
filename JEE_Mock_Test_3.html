@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mathematics by D.K. Singh - Advanced Multi-Section Portal</title>
+    <title>Mathematics by D.K. Singh - Advanced Testing Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -54,7 +54,7 @@
         <div class="flex-1 flex flex-col md:flex-row">
             <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
                 <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
-                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section</h2>
+                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section Evaluation</h2>
                     <p id="section-marking" class="text-xs text-indigo-700 mt-0.5">Marking Scheme: +4 for Correct, -1 for Incorrect.</p>
                 </div>
 
@@ -75,7 +75,7 @@
                 </div>
             </main>
 
-            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 flex flex-col justify-between">
+            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 flex flex-col justify-between sticky top-[80px] h-[calc(100vh-80px)]">
                 <div>
                     <h3 class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-4">Question Palette</h3>
                     <div class="grid grid-cols-5 gap-2.5" id="palette-grid"></div>
@@ -102,7 +102,7 @@
 
     <script>
         // ==========================================
-        // ⚙️ GLOBAL EDIT PANEL CONFIGURATION
+        // ⚙️ GLOBAL PARAMETER HARDENING EDIT PANEL
         // ==========================================
         const EXAM_NAME = "JEE Mains Mock Test 3";
         const EXAM_DURATION_MINUTES = 75;
@@ -110,7 +110,7 @@
         const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
 
         // ==========================================
-        // 📝 ADVANCED INTERACTIVE MATRIX ARRAY 
+        // 📝 INTERACTIVE QUESTION PALETTE BUILDER
         // ==========================================
         const questions = [
             {
@@ -182,7 +182,7 @@
                 id: 6,
                 section: "A",
                 type: "mcq",
-                text: String.raw`If $\log_{y}x + \log_{x}y = 7$, then the value of $(\log_{y}x)^{3} + (\log_{x}y)^{3}$ is`,
+                text: String.raw`If $\log_{y}x + \log_{x}y = 7$, then the value of $(\log_{y}x)^{3} + $(\log_{x}y)^{3}$ is`,
                 options: [
                     String.raw`322`,
                     String.raw`342`,
@@ -398,7 +398,7 @@
                 id: 24,
                 section: "B",
                 type: "numeric",
-                text: String.raw`ABCDEFG$ is a 7-sided regular polygon whose side length is 1, then find the value of $\frac{1}{AC} + \frac{1}{AD}$.`,
+                text: String.raw`$ABCDEFG$ is a 7-sided regular polygon whose side length is 1, then find the value of $\frac{1}{AC} + \frac{1}{AD}$.`,
                 correct: "1"
             },
             {
@@ -462,7 +462,14 @@
             window.addEventListener('keydown', e => { if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85))) e.preventDefault(); });
             document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && testRunning && !isLockedOut) triggerLockout(); });
             window.addEventListener('blur', () => { if (testRunning && !isLockedOut) triggerLockout(); });
+
+            window.addEventListener('beforeunload', (e) => {
+                if (testRunning && !isLockedOut) {
+                    silentBackgroundSubmit();
+                }
+            });
         }
+        
         function triggerLockout() { isLockedOut = true; document.getElementById('lockout-screen').classList.remove('hidden'); document.getElementById('pin-input').value = ""; document.getElementById('pin-input').focus(); }
         function verifyAndResume() { if (document.getElementById('pin-input').value.trim() === INIVIGILATOR_PIN) { isLockedOut = false; document.getElementById('lockout-screen').classList.add('hidden'); } else { alert("Incorrect Pin!"); } }
 
@@ -477,7 +484,12 @@
         function startTimer() {
             timerInterval = setInterval(() => {
                 if (!testRunning || isLockedOut) return;
-                if (timeRemaining <= 0) { testRunning = false; clearInterval(timerInterval); evaluateAndDisplayResults(); }
+                if (timeRemaining <= 0) { 
+                    testRunning = false; 
+                    clearInterval(timerInterval); 
+                    alert("Time has completely expired! Compiling score sheets and locking attempt window now.");
+                    evaluateAndDisplayResults(); 
+                }
                 else { timeRemaining--; let mins = Math.floor(timeRemaining / 60), secs = timeRemaining % 60; document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`; }
             }, 1000);
         }
@@ -501,15 +513,6 @@
 
             document.getElementById('section-title').innerText = `Section ${q.section} Type Evaluation`;
             document.getElementById('question-number-tag').innerText = `Question ${q.id} of ${questions.length} (${q.type.toUpperCase()})`;
-            
-            // Marking scheme labels dynamic shift based on mapping sections
-            const schemeTag = document.getElementById('section-marking');
-            if (q.section === "A") {
-                schemeTag.innerText = "Marking Scheme: +4 for Correct, -1 for Incorrect Choice.";
-            } else {
-                schemeTag.innerText = "Marking Scheme: +4 for Correct Integer Value, -1 for Incorrect matching.";
-            }
-            
             document.getElementById('question-text').innerText = q.text;
 
             const optBox = document.getElementById('options-container'); optBox.innerHTML = "";
@@ -551,9 +554,33 @@
         function nextQuestion() { if (currentIdx < questions.length - 1) loadQuestion(currentIdx + 1); }
         function confirmSubmit() { if (confirm("Submit exam paper?")) { testRunning = false; clearInterval(timerInterval); evaluateAndDisplayResults(); } }
 
-        function evaluateAndDisplayResults() {
+        function calculateMetrics() {
             let totalScore = 0;
             let sectionScores = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+
+            questions.forEach((q, idx) => {
+                const response = userResponses[idx];
+                let questionMarks = 0;
+
+                if (response !== undefined && response !== "" && JSON.stringify(response) !== "[]") {
+                    if (q.type === "mcq") {
+                        if (parseInt(response) === q.correct) questionMarks = 4; else questionMarks = -1;
+                    } else if (q.type === "multiselect") {
+                        let studentArr = Array.isArray(response) ? [...response].sort() : [];
+                        let correctArr = [...q.correct].sort();
+                        if (JSON.stringify(studentArr) === JSON.stringify(correctArr)) questionMarks = 4; else questionMarks = -1;
+                    } else {
+                        if (response.toString().toLowerCase() === q.correct.toString().toLowerCase()) questionMarks = 4; else questionMarks = -1;
+                    }
+                }
+                totalScore += questionMarks;
+                if (sectionScores[q.section] !== undefined) sectionScores[q.section] += questionMarks;
+            });
+            return { totalScore, sectionScores };
+        }
+
+        function evaluateAndDisplayResults() {
+            const metrics = calculateMetrics();
             const reviewContainer = document.getElementById('detailed-review-container');
             reviewContainer.innerHTML = "";
 
@@ -567,29 +594,44 @@
                     } else if (q.type === "multiselect") {
                         let studentArr = Array.isArray(response) ? [...response].sort() : [];
                         let correctArr = [...q.correct].sort();
-                        if (JSON.stringify(studentArr) === JSON.stringify(correctArr)) { questionMarks = 4; isCorrect = true; } else { questionMarks = -1; } 
+                        if (JSON.stringify(studentArr) === JSON.stringify(correctArr)) { questionMarks = 4; isCorrect = true; } else { questionMarks = -1; }
                     } else {
                         if (response.toString().toLowerCase() === q.correct.toString().toLowerCase()) { questionMarks = 4; isCorrect = true; } else { questionMarks = -1; }
                     }
                 }
 
-                totalScore += questionMarks;
-                if (sectionScores[q.section] !== undefined) sectionScores[q.section] += questionMarks;
+                let statusHTML = (response === undefined || response === "" || JSON.stringify(response) === "[]") ? 
+                    `<span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Unanswered</span>` : 
+                    (isCorrect ? `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Correct</span>` : `<span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Incorrect</span>`);
 
                 let card = document.createElement('div');
                 card.className = "p-5 border rounded-xl bg-white space-y-2 border-gray-200";
-                card.innerHTML = `<div class="flex justify-between font-bold text-sm border-b pb-1"><span>Question ${q.id} (Sec ${q.section})</span><span class="${isCorrect?'text-green-600':'text-red-600'}">${isCorrect?'Correct':'Incorrect/Unanswered'} (${questionMarks} Marks)</span></div><div class="text-base font-medium">${q.text}</div><div class="text-xs text-gray-500">Target Key Value: ${JSON.stringify(q.correct)} | Your Entry: ${JSON.stringify(response||"None")}</div>`;
+                card.innerHTML = `<div class="flex justify-between font-bold text-sm border-b pb-1"><span>Question ${q.id} (Sec ${q.section})</span>${statusHTML}</div><div class="text-base font-medium">${q.text}</div><div class="text-xs text-gray-500">Target Key: ${JSON.stringify(q.correct)} | Your Entry: ${JSON.stringify(response||"None")} (${questionMarks} Marks)</div>`;
                 reviewContainer.appendChild(card);
             });
 
-            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('final-score').innerText = metrics.totalScore;
             document.getElementById('test-interface').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
             if (window.renderMath) window.renderMath();
 
             fetch(GOOGLE_SHEET_WEBAPP_URL, {
                 method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ examName: EXAM_NAME, username: studentUsername, sectionA: sectionScores.A, sectionB: sectionScores.B, sectionC: sectionScores.C, sectionD: sectionScores.D, sectionE: sectionScores.E, totalScore: totalScore })
+                body: JSON.stringify({ examName: EXAM_NAME, username: studentUsername, sectionA: metrics.sectionScores.A, sectionB: metrics.sectionScores.B, sectionC: metrics.sectionScores.C, sectionD: metrics.sectionScores.D, sectionE: metrics.sectionScores.E, totalScore: metrics.totalScore })
+            })
+            .then(() => {
+                document.getElementById('sheet-status').innerText = "✅ Metrics logged instantly. You can now close this test window.";
+                document.getElementById('sheet-status').className = "text-xs font-bold text-green-600 bg-green-50 inline-block px-4 py-1 rounded-full mt-2";
+            });
+        }
+
+        function silentBackgroundSubmit() {
+            testRunning = false; clearInterval(timerInterval);
+            const metrics = calculateMetrics();
+            
+            fetch(GOOGLE_SHEET_WEBAPP_URL, {
+                method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ examName: EXAM_NAME, username: studentUsername, sectionA: metrics.sectionScores.A, sectionB: metrics.sectionScores.B, sectionC: metrics.sectionScores.C, sectionD: metrics.sectionScores.D, sectionE: metrics.sectionScores.E, totalScore: metrics.totalScore })
             });
         }
     </script>
