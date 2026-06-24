@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics by D.K. Singh - Advanced Testing Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="setupKaTeX();"></script>
+    <style>body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }</style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800" oncontextmenu="return false;">
+
+    <div id="lockout-screen" class="hidden fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center p-4 text-center">
+        <div class="bg-white p-8 rounded-2xl max-w-md w-full shadow-2xl border-t-8 border-red-600">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">⚠️</div>
+            <h2 class="text-2xl font-black text-gray-900" id="lockout-title">TEST LOCKED OUT</h2>
+            <p class="text-sm text-gray-600 mt-2 leading-relaxed" id="lockout-msg">A window switch or system interruption was detected. Please call the Invigilator to verify and resume your session.</p>
+            <div id="pin-box" class="mt-6">
+                <input type="password" id="pin-input" class="w-full text-center tracking-widest text-2xl font-mono px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none" placeholder="••••">
+                <button onclick="verifyAndResume()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl mt-4 transition shadow-md cursor-pointer">Verify & Resume Test</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 to-indigo-900 px-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">MATHEMATICS BY D.K. SINGH</h1>
+            <p class="text-red-600 font-semibold mt-1">🔒 ADVANCED INVIGILATED PORTAL</p>
+            <div class="my-6 p-4 border border-indigo-100 bg-indigo-50/50 rounded-xl text-left text-sm space-y-1">
+                <p><strong>Candidate:</strong> <span id="welcome-name" class="font-bold text-indigo-600">Loading identity...</span></p>
+                <p><strong>Assignment:</strong> <span id="welcome-exam-title" class="font-bold text-gray-900">Exam</span></p>
+            </div>
+            <button onclick="startTest()" id="start-btn" disabled class="w-full bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-not-allowed shadow-md">Verifying Credentials...</button>
+        </div>
+    </div>
+
+    <div id="test-interface" class="hidden min-h-screen flex flex-col">
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-sm">
+            <div>
+                <h1 class="text-xl font-bold text-gray-900">MATHEMATICS BY D.K. SINGH</h1>
+                <p class="text-sm text-gray-500 font-medium">Candidate: <span id="display-name" class="text-gray-800 font-bold"></span></p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-red-50 border border-red-200 px-4 py-2 rounded-lg text-center">
+                    <span class="text-xs text-red-500 font-bold block uppercase tracking-wide">Time Remaining</span>
+                    <span id="timer" class="text-xl font-mono font-bold text-red-600">00:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md cursor-pointer">Submit Test</button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col md:flex-row">
+            <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
+                <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
+                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section Evaluation</h2>
+                    <p id="section-marking" class="text-xs text-indigo-700 mt-0.5">Marking Scheme: +3 for Correct, 0 for Incorrect.</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-xs min-h-[300px] flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                            <span id="question-number-tag" class="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded-full">Question 1</span>
+                        </div>
+                        <div id="question-text" class="text-lg leading-relaxed mb-6 font-medium text-gray-900"></div>
+                        <div id="options-container" class="space-y-3"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-6 mt-8">
+                        <button onclick="prevQuestion()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-5 rounded-lg transition border border-gray-200 cursor-pointer">Previous</button>
+                        <button onclick="clearResponse()" class="text-sm text-gray-500 hover:text-red-600 font-semibold transition cursor-pointer">Clear Response</button>
+                        <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition shadow-xs cursor-pointer">Next</button>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 flex flex-col justify-between sticky top-[80px] h-[calc(100vh-80px)]">
+                <div>
+                    <h3 class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-4">Question Palette</h3>
+                    <div class="grid grid-cols-5 gap-2.5" id="palette-grid"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden min-h-screen bg-gray-100 px-4 py-12 flex flex-col items-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full text-center border border-gray-200 mb-8">
+            <h2 class="text-3xl font-extrabold text-green-600">Test Submitted Successfully!</h2>
+            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Syncing metrics data directly to 5-section master engine...</p>
+            
+            <div class="my-6 p-4 bg-indigo-50 border border-indigo-100 rounded-xl text-2xl font-black text-indigo-700">
+                Total Final Score: <span id="final-score">0</span>
+            </div>
+            <button onclick="window.close()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md">Close Test Window</button>
+        </div>
+        <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+            <h3 class="text-xl font-bold text-gray-900 border-b border-gray-200 pb-3 mb-6">📝 Detailed Question Evaluation</h3>
+            <div id="detailed-review-container" class="space-y-8"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ⚙️ GLOBAL PARAMETER HARDENING EDIT PANEL
+        // ==========================================
+        const EXAM_NAME = "Matrices and Determinants for Board exam";
+        const EXAM_DURATION_MINUTES = 90;
+        const INIVIGILATOR_PIN = "5831";
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
+
+        // ==========================================
+        // 📝 INTERACTIVE QUESTION PALETTE BUILDER
+        // ==========================================
+        const questions = [
+            {
+                id: 1,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = [a_{ij}]_{2 \times 2}$ where $a_{ij} = \frac{(i+2j)^{2}}{2}$, then the element $a_{12}$ is:`,
+                options: [String.raw`$\frac{9}{2}$`, String.raw`$\frac{25}{2}$`, String.raw`$8$`, String.raw`$18$`],
+                correct: 1
+            },
+            {
+                id: 2,
+                section: "A",
+                type: "mcq",
+                text: String.raw`For any square matrix $A$, the matrix $A - A^{T}$ is always a:`,
+                options: [String.raw`Symmetric matrix`, String.raw`Skew-symmetric matrix`, String.raw`Diagonal matrix`, String.raw`Identity matrix`],
+                correct: 1
+            },
+            {
+                id: 3,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is a square matrix of order 3 such that $|A| = 5$, then the value of $|\text{adj } A|$ is:`,
+                options: [String.raw`$5$`, String.raw`$25$`, String.raw`$125$`, String.raw`$1$`],
+                correct: 1
+            },
+            {
+                id: 4,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}$, then $A^{2}$ is equal to:`,
+                options: [String.raw`$\begin{bmatrix}7 & 10 \\ 15 & 22\end{bmatrix}$`, String.raw`$\begin{bmatrix}-7 & -10 \\ -15 & -22\end{bmatrix}$`, String.raw`$I$`, String.raw`$O$`],
+                correct: 0
+            },
+            {
+                id: 5,
+                section: "A",
+                type: "mcq",
+                text: String.raw`The total number of possible matrices of order $3 \times 3$ with each entry 0 or 1 is:`,
+                options: [String.raw`$27$`, String.raw`$18$`, String.raw`$81$`, String.raw`$512$`],
+                correct: 3
+            },
+            {
+                id: 6,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ and $B$ are symmetric matrices of the same order, then $AB - BA$ is a:`,
+                options: [String.raw`Skew-symmetric matrix`, String.raw`Symmetric matrix`, String.raw`Zero matrix`, String.raw`Identity matrix`],
+                correct: 0
+            },
+            {
+                id: 7,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}\cos \alpha & -\sin \alpha \\ \sin \alpha & \cos \alpha\end{bmatrix}$ and $A + A^{T} = I$, then the general value of $\alpha$ is:`,
+                options: [String.raw`$\frac{\pi}{6}$`, String.raw`$\frac{\pi}{3}$`, String.raw`$\pi$`, String.raw`$\frac{3\pi}{2}$`],
+                correct: 1
+            },
+            {
+                id: 8,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If the area of a triangle with vertices $(2,-6)$, $(5, 4)$, and $(k, 4)$ is 35 sq. units, then $k$ is:`,
+                options: [String.raw`$12$`, String.raw`$-2$`, String.raw`$12$ or $-2$`, String.raw`$-12$ or $-2$`],
+                correct: 2
+            },
+            {
+                id: 9,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Let $A$ be a non-singular square matrix of order $3 \times 3$. Then $|3A|$ is equal to:`,
+                options: [String.raw`$3|A|$`, String.raw`$9|A|$`, String.raw`$27|A|$`, String.raw`$81|A|$`],
+                correct: 2
+            },
+            {
+                id: 10,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}2 & 3 \\ 5 & -2\end{bmatrix}$, then $A^{-1}$ is equal to:`,
+                options: [String.raw`$\frac{1}{19}A$`, String.raw`$-\frac{1}{19}A$`, String.raw`$\frac{1}{19}A^{T}$`, String.raw`$A$`],
+                correct: 0
+            },
+            {
+                id: 11,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is a square matrix such that $A^{2} = A$, then $(I + A)^{3} - 7A$ is equal to:`,
+                options: [String.raw`$A$`, String.raw`$I - A$`, String.raw`$I$`, String.raw`$3A$`],
+                correct: 2
+            },
+            {
+                id: 12,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ and $B$ are invertible matrices of the same order, then which of the following is correct?`,
+                options: [String.raw`$(AB)^{-1} = A^{-1}B^{-1}$`, String.raw`$(AB)^{-1} = B^{-1}A^{-1}$`, String.raw`$(AB)^{T} = A^{T}B^{T}$`, String.raw`$(A+B)^{-1} = A^{-1} + B^{-1}$`],
+                correct: 1
+            },
+            {
+                id: 13,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $\begin{bmatrix}x+y & 2 \\ 1 & x-y\end{bmatrix} = \begin{bmatrix}3 & 2 \\ 1 & 7\end{bmatrix}$, then the values of $x$ and $y$ are:`,
+                options: [String.raw`$x = 5, y = 2$`, String.raw`$x = 5, y = -2$`, String.raw`$x = -5, y = 2$`, String.raw`$x = 2, y = 5$`],
+                correct: 1
+            },
+            {
+                id: 14,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If a matrix has 24 elements, what are the possible number of orders it can have?`,
+                options: [String.raw`$4$`, String.raw`$6$`, String.raw`$8$`, String.raw`$12$`],
+                correct: 2
+            },
+            {
+                id: 15,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is a skew-symmetric matrix of order 3, then the value of $|A|$ is:`,
+                options: [String.raw`$0$`, String.raw`$1$`, String.raw`$-1$`, String.raw`Any non-zero real number`],
+                correct: 0
+            },
+            {
+                id: 16,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $\begin{vmatrix}x & 2 \\ 18 & x\end{vmatrix} = \begin{vmatrix}6 & 2 \\ 18 & 6\end{vmatrix}$, then $x$ is equal to:`,
+                options: [String.raw`$6$`, String.raw`$\pm 6$`, String.raw`$-6$`, String.raw`$0$`],
+                correct: 1
+            },
+            {
+                id: 17,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}0 & 1 \\ 1 & 0\end{bmatrix}$, then $A^{4}$ is equal to:`,
+                options: [String.raw`$O$`, String.raw`$I$`, String.raw`$A$`, String.raw`$-I$`],
+                correct: 1
+            },
+            {
+                id: 18,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is a square matrix of order 3 and $|A| = k$, then $|\text{adj}(2A)|$ is:`,
+                options: [String.raw`$4k^{2}$`, String.raw`$16k^{2}$`, String.raw`$64k^{2}$`, String.raw`$8k^{2}$`],
+                correct: 2
+            },
+            {
+                id: 19,
+                section: "A",
+                type: "mcq",
+                text: String.raw`For two matrices $A$ and $B$, if $AB = O$, then:`,
+                options: [String.raw`$A = O$ or $B = O$`, String.raw`$A = O$ and $B = O$`, String.raw`It is not necessary that $A = O$ or $B = O$`, String.raw`All of the above`],
+                correct: 2
+            },
+            {
+                id: 20,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}\lambda & 1 \\ -1 & -\lambda\end{bmatrix}$, then $A^{2} = I$ for:`,
+                options: [String.raw`$\lambda = 0$ only`, String.raw`$\lambda = \pm 1$ only`, String.raw`no real value of $\lambda$`, String.raw`$\lambda = \pm \sqrt{2}$`],
+                correct: 1
+            },
+            {
+                id: 21,
+                section: "A",
+                type: "mcq",
+                text: String.raw`The element in the second row and third column of the matrix inverse of $\begin{bmatrix}1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0\end{bmatrix}$ is found using its:`,
+                options: [String.raw`Cofactor $C_{23}$`, String.raw`Cofactor $C_{32}$`, String.raw`Minor $M_{23}$`, String.raw`Minor $M_{32}$`],
+                correct: 1
+            },
+            {
+                id: 22,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}2 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 2\end{bmatrix}$, then $A^{5}$ is equal to:`,
+                options: [String.raw`$5A$`, String.raw`$10A$`, String.raw`$16A$`, String.raw`$32A$`],
+                correct: 2
+            },
+            {
+                id: 23,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}1 & -1 \\ 2 & -1\end{bmatrix}$, $B = \begin{bmatrix}a & 1 \\ b & -1\end{bmatrix}$ and $(A + B)^{2} = A^{2} + B^{2}$, then:`,
+                options: [String.raw`$a = 1, b = 4$`, String.raw`$a = 2, b = 3$`, String.raw`$a = 1, b = 3$`, String.raw`$a = 4, b = 1$`],
+                correct: 0
+            },
+            {
+                id: 24,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If the points $(x, 2)$, $(5, 2)$, and $(8, 8)$ are collinear, then the value of $x$ using determinants is:`,
+                options: [String.raw`$3$`, String.raw`$4$`, String.raw`$5$`, String.raw`$2$`],
+                correct: 2
+            },
+            {
+                id: 25,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is an orthogonal matrix, then $|A|$ is equal to:`,
+                options: [String.raw`$0$`, String.raw`$\pm 1$`, String.raw`$\pm 2$`, String.raw`None of these`],
+                correct: 1
+            },
+            {
+                id: 26,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A = \begin{bmatrix}\alpha & 0 \\ 1 & 1\end{bmatrix}$ and $B = \begin{bmatrix}1 & 0 \\ 5 & 1\end{bmatrix}$, then the value of $\alpha$ for which $A^{2} = B$ is:`,
+                options: [String.raw`$1$`, String.raw`$-1$`, String.raw`$4$`, String.raw`No real values`],
+                correct: 3
+            },
+            {
+                id: 27,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is a square matrix of order 3 and $A^{T} = A^{-1}$, then $|A|$ is:`,
+                options: [String.raw`$\pm 1$`, String.raw`$0$`, String.raw`$3$`, String.raw`$\frac{1}{3}$`],
+                correct: 0
+            },
+            {
+                id: 28,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Let $f(x) = \begin{vmatrix}1 & x & x+1 \\ 2x & x(x-1) & (x+1)x \\ 3x(x-1) & x(x-1)(x-2) & (x+1)x(x-1)\end{vmatrix}$, then $f(100)$ is equal to:`,
+                options: [String.raw`$100$`, String.raw`$0$`, String.raw`$5050$`, String.raw`$-100$`],
+                correct: 1
+            },
+            {
+                id: 29,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A$ is a row matrix as well as a column matrix, then the order of $A$ is:`,
+                options: [String.raw`$1 \times 1$`, String.raw`$1 \times n$`, String.raw`$m \times 1$`, String.raw`None of these`],
+                correct: 0
+           
