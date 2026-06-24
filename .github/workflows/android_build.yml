@@ -1,0 +1,30 @@
+name: Build Android APK
+on:
+  workflow_dispatch: # Allows you to manually click a button on your phone to build the APK
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Install Bubblewrap CLI
+      run: npm install -g @bubblewrap/cli
+
+    - name: Initialize Web Android Wrapper
+      run: |
+        bubblewrap init --manifest="https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec" --meta-package="com.priywrat.examportal"
+        bubblewrap build --meta-package="com.priywrat.examportal"
+
+    - name: Upload Compiled APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Mathematics-by-DK-Singh-App
+        path: ./*.apk
