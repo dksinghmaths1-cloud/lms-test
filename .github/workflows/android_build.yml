@@ -1,6 +1,6 @@
 name: Build Android APK
 on:
-  workflow_dispatch: # Allows you to manually click a button on your phone to build the APK
+  workflow_dispatch: # Allows you to manually tap the button on your phone to run it
 
 jobs:
   build:
@@ -9,22 +9,18 @@ jobs:
     - name: Checkout Repository Code
       uses: actions/checkout@v4
 
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
+    - name: Generate Fullscreen Android APK
+      uses: ovaaa/angular-pwa-apk-build@v1.0.1
       with:
-        java-version: '17'
-        distribution: 'temurin'
+        # 🔗 Your core web portal link that the app will open directly into
+        appUrl: 'https://priywrathimanshu.github.io/index.html'
+        appName: 'DK Singh Classes'
+        packageName: 'com.priywrat.examportal'
+        # Employs a public generic layout icon so it builds instantly without erroring out
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/5351/5351478.png'
 
-    - name: Install Bubblewrap CLI
-      run: npm install -g @bubblewrap/cli
-
-    - name: Initialize Web Android Wrapper
-      run: |
-        bubblewrap init --manifest="https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec" --meta-package="com.priywrat.examportal"
-        bubblewrap build --meta-package="com.priywrat.examportal"
-
-    - name: Upload Compiled APK Artifact
+    - name: Upload Compiled APK File
       uses: actions/upload-artifact@v4
       with:
-        name: Mathematics-by-DK-Singh-App
+        name: DK-Singh-Classes-App
         path: ./*.apk
