@@ -113,303 +113,302 @@
         // 📝 INTERACTIVE QUESTION PALETTE BUILDER
         // ==========================================
         const questions = [
-            {
-                id: 1,
-                section: "A",
-                type: "mcq",
-                text: String.raw`If $A+B+C=\pi$ and $8 \sin\left(A+\frac{C}{2}\right) = k \sin\frac{C}{2}$, then $\tan\frac{A}{2}\tan\frac{B}{2} =$`,
-                options: [
-                    String.raw`$\frac{k-1}{k+1}$`,
-                    String.raw`$\frac{k+1}{k-1}$`,
-                    String.raw`$\frac{k+1}{k-1}$`,
-                    String.raw`$\frac{k+1}{k}$`
-                ],
-                correct: 0
-            },
-            {
-                id: 2,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The value of $\sin 55^{\circ} - \sin 19^{\circ} + \sin 53^{\circ} - \sin 17^{\circ}$ is always equal to`,
-                options: [
-                    String.raw`$\cot 1^{\circ}$`,
-                    String.raw`$\sin 1^{\circ}$`,
-                    String.raw`$\tan 1^{\circ}$`,
-                    String.raw`$\cos 1^{\circ}$`
-                ],
-                correct: 3
-            },
-            {
-                id: 3,
-                section: "A",
-                type: "mcq",
-                text: String.raw`Exact value of $\cos^{2}73^{\circ} + \cos^{2}47^{\circ} - \sin^{2}43^{\circ} + \sin^{2}107^{\circ}$ is equal to:`,
-                options: [
-                    String.raw`$1/2$`,
-                    String.raw`$3/4$`,
-                    String.raw`$1$`,
-                    String.raw`None`
-                ],
-                correct: 2
-            },
-            {
-                id: 4,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The expression $\frac{1+\sin 2\alpha}{\cos(2\alpha-2\pi)\tan\left(\alpha-\frac{3\pi}{4}\right)} - \frac{1}{4}\sin 2\alpha\left[\cot\frac{\alpha}{2} + \cot\left(\frac{3\pi}{2}-\frac{\alpha}{2}\right)\right]$ is equal to`,
-                options: [
-                    String.raw`$1$`,
-                    String.raw`$0$`,
-                    String.raw`$2 \sin^{2}(\alpha/2)$`,
-                    String.raw`$\sin^{2}\alpha$`
-                ],
-                correct: 2
-            },
-            {
-                id: 5,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The value of $x$ satisfying the equation $2^{\log_{3}x} + 8 = 3 \cdot x^{\log_{9}4}$ is:`,
-                options: [
-                    String.raw`an irrational number`,
-                    String.raw`an odd prime number`,
-                    String.raw`relatively prime with 4`,
-                    String.raw`a rational number which is not an integer`
-                ],
-                correct: 2
-            },
-            {
-  id: 6,
-  section: "A",
-  type: "mcq",
-  text: String.raw`If $\log_{y}x + \log_{x}y = 7$, then the value of $(\log_{y}x)^{3} + (\log_{x}y)^{3}$ is`,
-  options: [
-    String.raw`322`,
-    String.raw`342`,
-    String.raw`343`,
-    String.raw`344`
-  ],
-  correct: 0
-}
-,
-            {
-                id: 7,
-                section: "A",
-                type: "mcq",
-                text: String.raw`Let $a, b, c$ be real numbers greater than 1. If $s = \log_{a}bc + \log_{b}ca + \log_{c}ab$ then`,
-                options: [
-                    String.raw`$s \le 9$`,
-                    String.raw`$s \ge 9$`,
-                    String.raw`$s \le 6$`,
-                    String.raw`$s \ge 6$`
-                ],
-                correct: 3
-            },
-            {
-                id: 8,
-                section: "A",
-                type: "mcq",
-                text: String.raw`For a positive number $m$, characteristic of $\log_{10}m$ - Mantissa of $\log_{10}m = 1.5$. Then $\log_{100}\left(\frac{m}{\sqrt{10}}\right) =$`,
-                options: [
-                    String.raw`1`,
-                    String.raw`-1`,
-                    String.raw`0`,
-                    String.raw`Insufficient data`
-                ],
-                correct: 0
-            },
-            {
-                id: 9,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The number of solutions of the equation $32^{\tan^{2}x} + 32^{\sec^{2}x} = 81$, $0 \le x \le \frac{\pi}{4}$ is:`,
-                options: [
-                    String.raw`1`,
-                    String.raw`3`,
-                    String.raw`0`,
-                    String.raw`2`
-                ],
-                correct: 0
-            },
-            {
-                id: 10,
-                section: "A",
-                type: "mcq",
-                text: String.raw`If $x^{2} + 9y^{2} - 4x + 3 = 0$, where $x, y \in \mathbb{R}$, then $x$ and $y$ respectively lie in the intervals:`,
-                options: [
-                    String.raw`$[1,3]$ and $[1,3]$`,
-                    String.raw`$[1,3]$ and $\left[-\frac{1}{3}, \frac{1}{3}\right]$`,
-                    String.raw`$\left[-\frac{1}{3}, \frac{1}{3}\right]$ and $[1,3]$`,
-                    String.raw`$\left[0, \frac{1}{3}\right]$ and $\left[0, \frac{1}{3}\right]$`
-                ],
-                correct: 1
-            },
-            {
-                id: 11,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The value of $2 \sin\left(\frac{\pi}{8}\right)\sin\left(\frac{2\pi}{8}\right)\sin\left(\frac{3\pi}{8}\right)\sin\left(\frac{5\pi}{8}\right)\sin\left(\frac{6\pi}{8}\right)\sin\left(\frac{7\pi}{8}\right)$ is:`,
-                options: [
-                    String.raw`$\frac{1}{4}$`,
-                    String.raw`$\frac{1}{8\sqrt{2}}$`,
-                    String.raw`$\frac{1}{8}$`,
-                    String.raw`$\frac{1}{4\sqrt{2}}$`
-                ],
-                correct: 2
-            },
-            {
-                id: 12,
-                section: "A",
-                type: "mcq",
-                text: String.raw`If $n$ is the number of solutions of the equation $2 \cos x \left(4 \sin\left(\frac{\pi}{4}+x\right)\sin\left(\frac{\pi}{4}-x\right) - 1\right) = 1$, $x \in [0,\pi]$ and $S$ is the sum of all these solutions, then the ordered pair $(n, S)$ is:`,
-                options: [
-                    String.raw`$\left(3, \frac{13\pi}{9}\right)$`,
-                    String.raw`$(3, 2\pi)$`,
-                    String.raw`$(3, 3\pi)$`,
-                    String.raw`$\left(2, \frac{13\pi}{9}\right)$`
-                ],
-                correct: 0
-            },
-            {
-                id: 13,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The sum of solutions of the equation $\frac{\cos x}{1+\sin x} = | \tan 2x |$ is, where $x \in \left(-\frac{\pi}{2}, \frac{\pi}{2}\right) - \left\{\frac{\pi}{4}, -\frac{\pi}{4}\right\}$:`,
-                options: [
-                    String.raw`$\frac{\pi}{10}$`,
-                    String.raw`$-\frac{11\pi}{30}$`,
-                    String.raw`$\frac{\pi}{15}$`,
-                    String.raw`$-\frac{7\pi}{30}$`
-                ],
-                correct: 1
-            },
-            {
-                id: 14,
-                section: "A",
-                type: "mcq",
-                text: String.raw`A vertical pole fixed to the horizontal ground is divided in the ratio $3:7$ by a mark on it with the lower part shorter than the upper part. If the two parts subtend equal angles at a point on the ground $18\text{ m}$ away from the base of the pole, then the height of the pole (in meters) is:`,
-                options: [
-                    String.raw`$12\sqrt{15}$`,
-                    String.raw`$12\sqrt{10}$`,
-                    String.raw`$8\sqrt{10}$`,
-                    String.raw`$6\sqrt{10}$`
-                ],
-                correct: 1
-            },
-            {
-                id: 15,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The sum of the roots of the equation, $x+1-2 \log_{2}(3+2^{x}) + 2 \log_{4}(10-2^{-x}) = 0$, is:`,
-                options: [
-                    String.raw`$\log_{2}12$`,
-                    String.raw`$\log_{2}13$`,
-                    String.raw`$\log_{2}11$`,
-                    String.raw`$\log_{2}14$`
-                ],
-                correct: 2
-            },
-            {
-                id: 16,
-                section: "A",
-                type: "mcq",
-                text: String.raw`Let $\alpha$ and $\beta$ be the roots of $x^{2}-6x-2=0$. If $a_{n} = \alpha^{n} - \beta^{n}$ for $n \ge 1$ then the value of $\frac{a_{10}-2a_{8}}{3a_{9}}$ is:`,
-                options: [
-                    String.raw`2`,
-                    String.raw`3`,
-                    String.raw`1`,
-                    String.raw`4`
-                ],
-                correct: 0
-            },
-            {
-                id: 17,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The number of solutions of the equation, $x + 2 \tan x = \frac{\pi}{2}$ in the interval $[0, 2\pi]$ is:`,
-                options: [
-                    String.raw`5`,
-                    String.raw`2`,
-                    String.raw`4`,
-                    String.raw`3`
-                ],
-                correct: 3
-            },
-            {
-                id: 18,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The number of real values of $x$ satisfying the equation $\log_{(x+1)}(2x^{2}+7x+5) + \log_{(2x+5)}(x+1)^{2} = 4$ is:`,
-                options: [
-                    String.raw`0`,
-                    String.raw`1`,
-                    String.raw`2`,
-                    String.raw`3`
-                ],
-                correct: 1
-            },
-            {
-                id: 19,
-                section: "A",
-                type: "mcq",
-                text: String.raw`The value of $(-\csc 6^{\circ} + \csc 18^{\circ} + \sec 24^{\circ} - \sec 36^{\circ} + \csc 42^{\circ} - \csc 78^{\circ})$ is equal to:`,
-                options: [
-                    String.raw`-6`,
-                    String.raw`6`,
-                    String.raw`4`,
-                    String.raw`2`
-                ],
-                correct: 0
-            },
-            {
-                id: 20,
-                section: "A",
-                type: "mcq",
-                text: String.raw`If $0 < \theta < \frac{\pi}{2}$ and $f(\theta) = (1 + \cot \theta - \csc \theta)(1 + \tan \theta + \sec \theta)$, then $f\left(\frac{\pi}{12}\right)$ is equal to:`,
-                options: [
-                    String.raw`0`,
-                    String.raw`1`,
-                    String.raw`$\sqrt{2}$`,
-                    String.raw`2`
-                ],
-                correct: 3
-            },
-            {
-                id: 21,
-                section: "B",
-                type: "numeric",
-                text: String.raw`It is known that $\left|2 \cos^{3}\frac{\pi}{7} - \cos^{2}\frac{\pi}{7} - \cos\frac{\pi}{7}\right|$ is a rational number. Write this rational number in the form $p/q$, where $p$ and $q$ are coprime natural numbers, then find the value of $p+q$.`,
-                correct: "5"
-            },
-            {
-                id: 22,
-                section: "B",
-                type: "numeric",
-                text: String.raw`If $\alpha, \beta, \gamma, \delta$ are the smallest positive angles in ascending order which have their sines equal to $\frac{7}{9}$, then find the value of $\left(12 \sin\frac{\alpha}{2} + 9 \sin\frac{\beta}{2} + 6 \sin\frac{\gamma}{2} + 3 \sin\frac{\delta}{2}\right)^{2}$.`,
-                correct: "8"
-            },
-            {
-                id: 23,
-                section: "B",
-                type: "numeric",
-                text: String.raw`The number of integral values of 'a' such that both roots of the equation $ax^{2} + (3a+1)x - 5 = 0$ are integers is:`,
-                correct: "1"
-            },
-            {
-                id: 24,
-                section: "B",
-                type: "numeric",
-                text: String.raw`$ABCDEFG$ is a 7-sided regular polygon whose side length is 1, then find the value of $\frac{1}{AC} + \frac{1}{AD}$.`,
-                correct: "1"
-            },
-            {
-                id: 25,
-                section: "B",
-                type: "numeric",
-                text: String.raw`If $\alpha, \beta$ are the roots of the equation $\lambda(x^{2}-x) + x + 5 = 0$ and if $\lambda_{1}, \lambda_{2}$ are two values of $\lambda$ that satisfy $\frac{\alpha}{\beta} + \frac{\beta}{\alpha} = \frac{4}{5}$, then find the value of $\frac{\lambda_{1}}{\lambda_{2}^{2}} + \frac{\lambda_{2}}{\lambda_{1}^{2}}$.`,
-                correct: "4048"
-            }
-        ];
+  {
+    id: 1,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $A+B+C=\pi$ and $8\sin\left(A+\frac{C}{2}\right)=k\sin\frac{C}{2}$, then $\tan\frac{A}{2}\tan\frac{B}{2} =$`,
+    options: [
+      String.raw`$\frac{k-1}{k+1}$`,
+      String.raw`$\frac{k+1}{k-1}$`,
+      String.raw`$\frac{k+1}{k-1}$`,
+      String.raw`$\frac{k+1}{k}$`
+    ],
+    correct: 0
+  },
+  {
+    id: 2,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The value of $\sin 55^{\circ}-\sin 19^{\circ}+\sin 53^{\circ}-\sin 17^{\circ}$ is always equal to`,
+    options: [
+      String.raw`$\cot 1^{\circ}$`,
+      String.raw`$\sin 1^{\circ}$`,
+      String.raw`$\tan 1^{\circ}$`,
+      String.raw`$\cos 1^{\circ}$`
+    ],
+    correct: 3
+  },
+  {
+    id: 3,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Exact value of $\cos^{2}73^{\circ}+\cos^{2}47^{\circ}-\sin^{2}43^{\circ}+\sin^{2}107^{\circ}$ is equal to:`,
+    options: [
+      String.raw`$1/2$`,
+      String.raw`$3/4$`,
+      String.raw`$1$`,
+      String.raw`None`
+    ],
+    correct: 2
+  },
+  {
+    id: 4,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The expression $\frac{1+\sin 2\alpha}{\cos(2\alpha-2\pi)\tan\left(\alpha-\frac{3\pi}{4}\right)}-\frac{1}{4}\sin 2\alpha\left[\cot\frac{\alpha}{2}+\cot\left(\frac{3\pi}{2}-\frac{\alpha}{2}\right)\right]$ is equal to`,
+    options: [
+      String.raw`$1$`,
+      String.raw`$0$`,
+      String.raw`$2\sin^{2}(\alpha/2)$`,
+      String.raw`$\sin^{2}\alpha$`
+    ],
+    correct: 2
+  },
+  {
+    id: 5,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The value of $x$ satisfying the equation $2^{\log_{3}x}+8=3\cdot x^{\log_{9}4}$ is:`,
+    options: [
+      String.raw`an irrational number`,
+      String.raw`an odd prime number`,
+      String.raw`relatively prime with 4`,
+      String.raw`a rational number which is not an integer`
+    ],
+    correct: 2
+  },
+  {
+    id: 6,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $\log_{y}x+\log_{x}y=7$, then the value of $(\log_{y}x)^{3}+(\log_{x}y)^{3}$ is`,
+    options: [
+      String.raw`$322$`,
+      String.raw`$342$`,
+      String.raw`$343$`,
+      String.raw`$344$`
+    ],
+    correct: 0
+  },
+  {
+    id: 7,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Let $a, b, c$ be real numbers greater than 1. If $s=\log_{a}bc+\log_{b}ca+\log_{c}ab$, then`,
+    options: [
+      String.raw`$s\le9$`,
+      String.raw`$s\ge9$`,
+      String.raw`$s\le6$`,
+      String.raw`$s\ge6$`
+    ],
+    correct: 3
+  },
+  {
+    id: 8,
+    section: "A",
+    type: "mcq",
+    text: String.raw`For a positive number $m$, $\text{characteristic of }\log_{10}m - \text{Mantissa of }\log_{10}m=1.5$. Then $\log_{100}\left(\frac{m}{\sqrt{10}}\right)=$`,
+    options: [
+      String.raw`$1$`,
+      String.raw`$-1$`,
+      String.raw`$0$`,
+      String.raw`Insufficient data`
+    ],
+    correct: 0
+  },
+  {
+    id: 9,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The number of solutions of the equation $32^{\tan^{2}x}+32^{\sec^{2}x}=81$, $0\le x\le\frac{\pi}{4}$ is:`,
+    options: [
+      String.raw`$1$`,
+      String.raw`$3$`,
+      String.raw`$0$`,
+      String.raw`$2$`
+    ],
+    correct: 0
+  },
+  {
+    id: 10,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $x^{2}+9y^{2}-4x+3=0$, where $x, y\in \mathbb{R}$, then $x$ and $y$ respectively lie in the intervals:`,
+    options: [
+      String.raw`$[1, 3]$ and $[1, 3]$`,
+      String.raw`$[1, 3]$ and $\left[-\frac{1}{3},\frac{1}{3}\right]$`,
+      String.raw`$\left[-\frac{1}{3},\frac{1}{3}\right]$ and $[1, 3]$`,
+      String.raw`$\left[-\frac{1}{3},\frac{1}{3}\right]$ and $\left[-\frac{1}{3},\frac{1}{3}\right]$`
+    ],
+    correct: 1
+  },
+  {
+    id: 11,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The value of $2\sin\left(\frac{\pi}{8}\right)\sin\left(\frac{2\pi}{8}\right)\sin\left(\frac{3\pi}{8}\right)\sin\left(\frac{5\pi}{8}\right)\sin\left(\frac{6\pi}{8}\right)\sin\left(\frac{7\pi}{8}\right)$ is:`,
+    options: [
+      String.raw`$\frac{1}{4}$`,
+      String.raw`$\frac{1}{8\sqrt{2}}$`,
+      String.raw`$\frac{1}{8}$`,
+      String.raw`$\frac{1}{4\sqrt{2}}$`
+    ],
+    correct: 2
+  },
+  {
+    id: 12,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $n$ is the number of solutions of the equation $2\cos x\left(4\sin\left(\frac{\pi}{4}+x\right)\sin\left(\frac{\pi}{4}-x\right)-1\right)=1$, $x\in[0,\pi]$ and $S$ is the sum of all these solutions, then the ordered pair $(n, S)$ is:`,
+    options: [
+      String.raw`$\left(3,\frac{5\pi}{3}\right)$`,
+      String.raw`$(3,2)$`,
+      String.raw`$\left(3,\frac{13\pi}{9}\right)$`,
+      String.raw`$\left(2,\frac{8\pi}{9}\right)$`
+    ],
+    correct: 2
+  },
+  {
+    id: 13,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The sum of solutions of the equation $\frac{\cos x}{1+\sin x}=|\tan 2x|$ is, where $x\in\left(-\frac{\pi}{2},\frac{\pi}{2}\right)-\left\{\frac{\pi}{4},-\frac{\pi}{4}\right\}$:`,
+    options: [
+      String.raw`$\frac{\pi}{10}$`,
+      String.raw`$-\frac{11\pi}{30}$`,
+      String.raw`$\frac{\pi}{15}$`,
+      String.raw`$-\frac{7\pi}{30}$`
+    ],
+    correct: 1
+  },
+  {
+    id: 14,
+    section: "A",
+    type: "mcq",
+    text: String.raw`A vertical pole fixed to the horizontal ground is divided in the ratio $3:7$ by a mark on it with the lower part shorter than the upper part. If the two parts subtend equal angles at a point on the ground $18\text{ m}$ away from the base of the pole, then the height of the pole (in meters) is:`,
+    options: [
+      String.raw`$12\sqrt{15}$`,
+      String.raw`$12\sqrt{10}$`,
+      String.raw`$8\sqrt{10}$`,
+      String.raw`$6\sqrt{10}$`
+    ],
+    correct: 1
+  },
+  {
+    id: 15,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The sum of the roots of the equation, $x+1-2\log_{2}(3+2^{x})+2\log_{4}(10-2^{-x})=0$, is:`,
+    options: [
+      String.raw`$\log_{2}12$`,
+      String.raw`$\log_{2}13$`,
+      String.raw`$\log_{2}11$`,
+      String.raw`$\log_{2}14$`
+    ],
+    correct: 2
+  },
+  {
+    id: 16,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Let $\alpha$ and $\beta$ be the roots of $x^2-6x-2=0$. If $a_{n}=\alpha^{n}-\beta^{n}$ for $n\ge1$, then the value of $\frac{a_{10}-2a_{8}}{3a_{9}}$ is:`,
+    options: [
+      String.raw`$2$`,
+      String.raw`$3$`,
+      String.raw`$1$`,
+      String.raw`$4$`
+    ],
+    correct: 0
+  },
+  {
+    id: 17,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The number of solutions of the equation, $x+2\tan x=\frac{\pi}{2}$ in the interval $[0,2\pi]$ is:`,
+    options: [
+      String.raw`$5$`,
+      String.raw`$2$`,
+      String.raw`$4$`,
+      String.raw`$3$`
+    ],
+    correct: 3
+  },
+  {
+    id: 18,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The number of real values of $x$ satisfying the equation $\log_{(x+1)}(2x^{2}+7x+5)+\log_{(2x+5)}(x+1)^{2}=4$ is:`,
+    options: [
+      String.raw`$0$`,
+      String.raw`$1$`,
+      String.raw`$2$`,
+      String.raw`$3$`
+    ],
+    correct: 1
+  },
+  {
+    id: 19,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The value of $(-\csc 6^{\circ}+\csc 18^{\circ}+\sec 24^{\circ}-\sec 36^{\circ}+\csc 42^{\circ}-\csc 78^{\circ})$ is equal to:`,
+    options: [
+      String.raw`$-6$`,
+      String.raw`$6$`,
+      String.raw`$4$`,
+      String.raw`$2$`
+    ],
+    correct: 0
+  },
+  {
+    id: 20,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $0<\theta<\frac{\pi}{2}$ and $f(\theta)=(1+\cot\theta-\csc\theta)(1+\tan\theta+\sec\theta)$, then $f\left(\frac{\pi}{12}\right)$ is equal to:`,
+    options: [
+      String.raw`$0$`,
+      String.raw`$1$`,
+      String.raw`$\sqrt{2}$`,
+      String.raw`$2$`
+    ],
+    correct: 3
+  },
+  {
+    id: 21,
+    section: "B",
+    type: "numeric",
+    text: String.raw`It is known that $\left|2\cos^{3}\frac{\pi}{7}-\cos^{2}\frac{\pi}{7}-\cos\frac{\pi}{7}\right|$ is a rational number. Write this rational number in the form $p/q$, where $p$ and $q$ are coprime natural numbers, then find the value of $p+q$.`,
+    correct: "5"
+  },
+  {
+    id: 22,
+    section: "B",
+    type: "numeric",
+    text: String.raw`If $\alpha, \beta, \gamma, \delta$ are the smallest positive angles in ascending order which have their sines equal to $\frac{7}{9}$, then find the value of $\left(12\sin\frac{\alpha}{2}+9\sin\frac{\beta}{2}+6\sin\frac{\gamma}{2}+3\sin\frac{\delta}{2}\right)$.`,
+    correct: "8"
+  },
+  {
+    id: 23,
+    section: "B",
+    type: "numeric",
+    text: String.raw`The number of integral values of '$a$' such that both roots of the equation $ax^{2}+(3a+1)x-5=0$ are integers is:`,
+    correct: "1"
+  },
+  {
+    id: 24,
+    section: "B",
+    type: "numeric",
+    text: String.raw`$ABCDEFG$ is a 7-sided regular polygon whose side length is 1, then find the value of $\frac{1}{AC}+\frac{1}{AD}$.`,
+    correct: "1"
+  },
+  {
+    id: 25,
+    section: "B",
+    type: "numeric",
+    text: String.raw`If $\alpha, \beta$ are the roots of the equation $\lambda(x^{2}-x)+x+5=0$ and if $\lambda_{1}, \lambda_{2}$ are two values of $\lambda$ that satisfy $\frac{\alpha}{\beta}+\frac{\beta}{\alpha}=\frac{4}{5}$, then find the value of $\frac{\lambda_{1}}{\lambda_{2}^{2}}+\frac{\lambda_{2}}{\lambda_{1}^{2}}$.`,
+    correct: "4048"
+  }
+];
 
         let studentUsername = "", studentName = "", currentIdx = 0, userResponses = {};
         let timeRemaining = EXAM_DURATION_MINUTES * 60, timerInterval, testRunning = false, isLockedOut = false;
