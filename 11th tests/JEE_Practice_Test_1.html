@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics by D.K. Singh - Advanced Testing Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="setupKaTeX();"></script>
+    <style>body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }</style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800" oncontextmenu="return false;">
+
+    <div id="lockout-screen" class="hidden fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center p-4 text-center">
+        <div class="bg-white p-8 rounded-2xl max-w-md w-full shadow-2xl border-t-8 border-red-600">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">⚠️</div>
+            <h2 class="text-2xl font-black text-gray-900" id="lockout-title">TEST LOCKED OUT</h2>
+            <p class="text-sm text-gray-600 mt-2 leading-relaxed" id="lockout-msg">A window switch or system interruption was detected. Please call the Invigilator to verify and resume your session.</p>
+            <div id="pin-box" class="mt-6">
+                <input type="password" id="pin-input" class="w-full text-center tracking-widest text-2xl font-mono px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none" placeholder="••••">
+                <button onclick="verifyAndResume()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl mt-4 transition shadow-md cursor-pointer">Verify & Resume Test</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 to-indigo-900 px-4">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">MATHEMATICS BY D.K. SINGH</h1>
+            <p class="text-red-600 font-semibold mt-1">🔒 ADVANCED INVIGILATED PORTAL</p>
+            <div class="my-6 p-4 border border-indigo-100 bg-indigo-50/50 rounded-xl text-left text-sm space-y-1">
+                <p><strong>Candidate:</strong> <span id="welcome-name" class="font-bold text-indigo-600">Loading identity...</span></p>
+                <p><strong>Assignment:</strong> <span id="welcome-exam-title" class="font-bold text-gray-900">Exam</span></p>
+            </div>
+            <button onclick="startTest()" id="start-btn" disabled class="w-full bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-not-allowed shadow-md">Verifying Credentials...</button>
+        </div>
+    </div>
+
+    <div id="test-interface" class="hidden min-h-screen flex flex-col">
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-sm">
+            <div>
+                <h1 class="text-xl font-bold text-gray-900">MATHEMATICS BY D.K. SINGH</h1>
+                <p class="text-sm text-gray-500 font-medium">Candidate: <span id="display-name" class="text-gray-800 font-bold"></span></p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-red-50 border border-red-200 px-4 py-2 rounded-lg text-center">
+                    <span class="text-xs text-red-500 font-bold block uppercase tracking-wide">Time Remaining</span>
+                    <span id="timer" class="text-xl font-mono font-bold text-red-600">00:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md cursor-pointer">Submit Test</button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col md:flex-row">
+            <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
+                <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-6">
+                    <h2 id="section-title" class="font-bold text-indigo-900 text-lg">Section Evaluation</h2>
+                    <p id="section-marking" class="text-xs text-indigo-700 mt-0.5">Marking Scheme Configuration loading...</p>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-xs min-h-[300px] flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                            <span id="question-number-tag" class="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded-full">Question 1</span>
+                        </div>
+                        <div id="question-text" class="text-lg leading-relaxed mb-6 font-medium text-gray-900"></div>
+                        <div id="options-container" class="space-y-3"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-6 mt-8">
+                        <button onclick="prevQuestion()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-5 rounded-lg transition border border-gray-200 cursor-pointer">Previous</button>
+                        <button onclick="clearResponse()" class="text-sm text-gray-500 hover:text-red-600 font-semibold transition cursor-pointer">Clear Response</button>
+                        <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition shadow-xs cursor-pointer">Next</button>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="w-full md:w-80 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-6 flex flex-col justify-between sticky top-[80px] h-[calc(100vh-80px)]">
+                <div>
+                    <h3 class="font-bold text-gray-900 uppercase text-xs tracking-wider mb-4">Question Palette</h3>
+                    <div class="grid grid-cols-5 gap-2.5" id="palette-grid"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden min-h-screen bg-gray-100 px-4 py-12 flex flex-col items-center">
+        <div class="bg-white p-8 rounded-2xl shadow-xl max-w-3xl w-full text-center border border-gray-200 mb-8">
+            <h2 class="text-3xl font-extrabold text-green-600">Test Submitted Successfully!</h2>
+            <p id="sheet-status" class="text-xs font-bold text-indigo-600 bg-indigo-50 inline-block px-4 py-1 rounded-full mt-2">📊 Syncing metrics data directly to 5-section master engine...</p>
+            
+            <div class="my-6 p-4 bg-indigo-50 border border-indigo-100 rounded-xl text-2xl font-black text-indigo-700">
+                Total Final Score: <span id="final-score">0</span>
+            </div>
+            <button onclick="window.close()" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-md">Close Test Window</button>
+        </div>
+        <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+            <h3 class="text-xl font-bold text-gray-900 border-b border-gray-200 pb-3 mb-6">📝 Detailed Question Evaluation</h3>
+            <div id="detailed-review-container" class="space-y-8"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ⚙️ GLOBAL PARAMETER HARDENING EDIT PANEL
+        // ==========================================
+        const EXAM_NAME = "JEE Practice Test - 1";
+        const EXAM_DURATION_MINUTES = 90;
+        const INIVIGILATOR_PIN = "5831";
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyX0nshaU9rAayGLuscolBXr9F_4D0hYDTsejcp8yH4OFH2MhtyQp5l5MvvqF93lt3B/exec";
+
+        // ==========================================
+        // 📝 INTERACTIVE QUESTION PALETTE BUILDER
+        // ==========================================
+        const questions = [
+            {
+                id: 1,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $\frac{4}{2+\sqrt{3}+\sqrt{7}}=\sqrt{a}+\sqrt{b}-\sqrt{c},$ then which of the following can be true:`,
+                options: [
+                    String.raw`$a=1$, $b=4/3$, $c=7/3$`,
+                    String.raw`$a=1$, $b=2/3$, $c=7/9$`,
+                    String.raw`$a=2/3$, $b=1$, $c=7/3$`,
+                    String.raw`$a=7/9$, $b=4/3$, $c=1$`
+                ],
+                correct: 0
+            },
+            {
+                id: 2,
+                section: "A",
+                type: "mcq",
+                text: String.raw`$\left(7^{-\frac{1}{2}} \times 5^{2}\right)^{2} \div \sqrt{25^{3}} =$`,
+                options: [
+                    String.raw`$\frac{5}{7}$`,
+                    String.raw`$\frac{7}{5}$`,
+                    String.raw`$35$`,
+                    String.raw`$-\frac{5}{7}$`
+                ],
+                correct: 0
+            },
+            {
+                id: 3,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Remainders when $P(x)=ax^{2}-bx+2$ is divided by $x-1$ and $x+1$ are $3$ and $5$ respectively, then the value of $a-2b$ is:`,
+                options: [
+                    String.raw`$1$`,
+                    String.raw`$-1$`,
+                    String.raw`$0$`,
+                    String.raw`$2$`
+                ],
+                correct: 2
+            },
+            {
+                id: 4,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Which of the following is correct?`,
+                options: [
+                    String.raw`$3^{1/3} < 4^{1/4}$`,
+                    String.raw`$2^{1/2} > 3^{1/3}$`,
+                    String.raw`$5^{1/5} < 4^{1/4}$`,
+                    String.raw`$2^{1/2} < 4^{1/4}$`
+                ],
+                correct: 2
+            },
+            {
+                id: 5,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Exact value of $(8+\sqrt{60})^{\frac{1}{2}}+(8-\sqrt{60})^{\frac{1}{2}}$ is`,
+                options: [
+                    String.raw`$2\sqrt{3}$`,
+                    String.raw`$16$`,
+                    String.raw`$2\sqrt{5}$`,
+                    String.raw`$8$`
+                ],
+                correct: 2
+            },
+            {
+                id: 6,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Sum of $2$-digit positive integers which are divisible by $4$ and $9$ is:`,
+                options: [
+                    String.raw`$326$`,
+                    String.raw`$108$`,
+                    String.raw`$1053$`,
+                    String.raw`$1228$`
+                ],
+                correct: 1
+            },
+            {
+                id: 7,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $x+y=1$ and $x^{2}+y^{2}=2$, then the value of $x^{4}+y^{4}$ equals`,
+                options: [
+                    String.raw`$7$`,
+                    String.raw`$6$`,
+                    String.raw`$7/2$`,
+                    String.raw`$19/4$`
+                ],
+                correct: 2
+            },
+            {
+                id: 8,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A=\{a,e,i,o,u\}$ and $B=\{i,o\}$, then the true statement is:`,
+                options: [
+                    String.raw`$A \subset B$`,
+                    String.raw`$B \subset A$`,
+                    String.raw`$A = B$`,
+                    String.raw`$A$ is equivalent to $B$`
+                ],
+                correct: 1
+            },
+            {
+                id: 9,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Solve: $\frac{\sqrt{10+3x}+\sqrt{10-3x}}{\sqrt{10+3x}-\sqrt{10-3x}}=3.$`,
+                options: [
+                    String.raw`$x=4$`,
+                    String.raw`$x=5$`,
+                    String.raw`$x=7$`,
+                    String.raw`$x=2$`
+                ],
+                correct: 3
+            },
+            {
+                id: 10,
+                section: "A",
+                type: "mcq",
+                text: String.raw`The solution set of the inequality $\frac{1}{x} < 1$ is`,
+                options: [
+                    String.raw`$(1,\infty)$`,
+                    String.raw`$(-\infty, 1)$`,
+                    String.raw`$(-\infty,0)\cup(1,\infty)$`,
+                    String.raw`None of these`
+                ],
+                correct: 2
+            },
+            {
+                id: 11,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $a,b \in \mathbb{N}$ and $a+b=ab$, then the number of ordered pairs $(a,b)$ is equal to`,
+                options: [
+                    String.raw`$2$`,
+                    String.raw`$3$`,
+                    String.raw`$0$`,
+                    String.raw`$1$`
+                ],
+                correct: 3
+            },
+            {
+                id: 12,
+                section: "A",
+                type: "mcq",
+                text: String.raw`The sum of all solution(s) of the equation $||x-2|-3|=1$ is`,
+                options: [
+                    String.raw`$0$`,
+                    String.raw`$4$`,
+                    String.raw`$6$`,
+                    String.raw`$8$`
+                ],
+                correct: 3
+            },
+            {
+                id: 13,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Which of the following is a null set?`,
+                options: [
+                    String.raw`$A=\{x:x>1 \text{ and } x<1\}$`,
+                    String.raw`$B=\{x:x+3=3\}$`,
+                    String.raw`$C=\{\phi\}$`,
+                    String.raw`$D=\{x:x\ge1 \text{ and } x\le1\}$`
+                ],
+                correct: 0
+            },
+            {
+                id: 14,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Roster form of the set $A=\{x:x\in \mathbb{N}, x^{2}<30\}$ is`,
+                options: [
+                    String.raw`$\{1, 2, 3, 4, 5\}$`,
+                    String.raw`$\{0, 1, 2, 3, 4, 5\}$`,
+                    String.raw`$\{-5,-4,-3,\dots, 4, 5\}$`,
+                    String.raw`None of these`
+                ],
+                correct: 0
+            },
+            {
+                id: 15,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Let $A$ and $B$ be two sets, then $(A\cup B)' \cup (A' \cap B)$ is equal to`,
+                options: [
+                    String.raw`$A'$`,
+                    String.raw`$A$`,
+                    String.raw`$B'$`,
+                    String.raw`None of these`
+                ],
+                correct: 0
+            },
+            {
+                id: 16,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Let $A$ and $B$ be two sets such that $n(A)=70$, $n(B)=60$ and $n(A\cup B)=110.$ Then $n(A\cap B)$ is equal to`,
+                options: [
+                    String.raw`$240$`,
+                    String.raw`$20$`,
+                    String.raw`$100$`,
+                    String.raw`$122$`
+                ],
+                correct: 1
+            },
+            {
+                id: 17,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $A=\{2,3,4,8,10\}$, $B=\{3,4,5,10,12\}$, and $C=\{4,5,6,12,14\}$, then $(A \cap B) \cup (A \cap C)$ is equal to`,
+                options: [
+                    String.raw`$\{3, 4, 10\}$`,
+                    String.raw`$\{2, 8, 10\}$`,
+                    String.raw`$\{4, 5, 6\}$`,
+                    String.raw`$\{3, 5, 14\}$`
+                ],
+                correct: 0
+            },
+            {
+                id: 18,
+                section: "A",
+                type: "mcq",
+                text: String.raw`Remainder when $f(x)=x^{5}-x^{3}+3x^{2}+3x+1$ is divided by $(x^{2}-1)$ is`,
+                options: [
+                    String.raw`$3x+4$`,
+                    String.raw`$2x-3$`,
+                    String.raw`$3x+1$`,
+                    String.raw`$2x+5$`
+                ],
+                correct: 0
+            },
+            {
+                id: 19,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $x-\frac{2}{x-1}=1-\frac{2}{x-1}$, then the number of solutions is`,
+                options: [
+                    String.raw`$1$`,
+                    String.raw`$2$`,
+                    String.raw`$3$`,
+                    String.raw`$0$`
+                ],
+                correct: 3
+            },
+            {
+                id: 20,
+                section: "A",
+                type: "mcq",
+                text: String.raw`If $\frac{a+b}{2\sqrt{ab}}=2$ (where $a>b$), then $a:b =$`,
+                options: [
+                    String.raw`$(7-4\sqrt{3}):1$`,
+                    String.raw`$(7+4\sqrt{3}):1$`,
+                    String.raw`$(2-\sqrt{3}):(3+\sqrt{3})$`,
+                    String.raw`$2:3$`
+                ],
+                correct: 1
+            },
+            {
+                id: 21,
+                section: "B",
+                type: "numeric",
+                text: String.raw`If $P(x)$ is a cubic polynomial such that $P(1)=1$; $P(2)=2$; $P(3)=3$ with leading coefficient $3$, then the sum of the digits of $P(4)$ is equal to:`,
+                correct: "4"
+            },
+            {
+                id: 22,
+                section: "B",
+                type: "numeric",
+                text: String.raw`If $m, n$ are positive integers and $m+n\sqrt{2}=\sqrt{44+24\sqrt{2}},$ then $(m+n)$ is equal to:`,
+                correct: "8"
+            },
+            {
+                id: 23,
+                section: "B",
+                type: "numeric",
+                text: String.raw`If $a^{2}+b^{2}+c^{2}-ab-bc-ca \le 0$ (where $a, b, c$ are non-zero real numbers), then the value of $\frac{a+b+c}{c}$ is equal to:`,
+                correct: "3"
+            },
+            {
+                id: 24,
+                section: "B",
+                type: "numeric",
+                text: String.raw`If $x=1+\sqrt{3},$ then the value of $x^{4}-x^{3}-2x^{2}-6x+1$ is equal to:`,
+                correct: "5"
+            },
+            {
+                id: 25,
+                section: "B",
+                type: "numeric",
+                text: String.raw`Let $A=\{a,b,c,d,e\}$, then the total number of proper subsets of $A$ is:`,
+                correct: "31"
+            },
+            {
+                id: 26,
+                section: "B",
+                type: "numeric",
+                text: String.raw`Let $n(U)=600,$ $n(A)=200$, $n(A\cap B)=100$ and $n(A^{c}\cap B^{c})=200$, then $n(A' \cap B) = $`,
+                correct: "200"
+            },
+            {
+                id: 27,
+                section: "B",
+                type: "numeric",
+                text: String.raw`If $a\mathbb{N}=\{ax:x\in \mathbb{N}\}$ and $3\mathbb{N} \cap 5\mathbb{N}=\alpha \mathbb{N},$ then find the value of $\alpha$.`,
+                correct: "15"
+            },
+            {
+                id: 28,
+                section: "B",
+                type
