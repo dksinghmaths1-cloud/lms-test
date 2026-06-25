@@ -113,32 +113,303 @@
         // 📝 INTERACTIVE QUESTION PALETTE BUILDER
         // ==========================================
         const questions = [
-            { id: 1, section: "A", type: "mcq", text: String.raw`In a triangle $ABC$, if $A-B=120^{\circ}$ and $\sin\frac{A}{2}\sin\frac{B}{2}\sin\frac{C}{2}=\frac{1}{32}$, then $\cos C$ equals:`, options: ["$3/4$", "$2/3$", "$5/6$", "$7/8$"], correct: 3 },
-            { id: 2, section: "A", type: "mcq", text: String.raw`The value of the expression $\frac{1}{\cos 290^{\circ}}+\frac{1}{\sqrt{3}\sin 250^{\circ}}$ is:`, options: [String.raw`$\frac{\sqrt{3}}{4}$`, String.raw`$\frac{4}{\sqrt{3}}$`, String.raw`$\frac{2}{\sqrt{3}}$`, String.raw`$\frac{\sqrt{3}}{2}$`], correct: 1 },
-            { id: 3, section: "A", type: "mcq", text: String.raw`If $a\cos^{3}\alpha+3a\cos\alpha\sin^{2}\alpha=m$ and $a\sin^{3}\alpha+3a\cos^{2}\alpha\sin\alpha=n$, then $(m+n)^{2/3}+(m-n)^{2/3}$ is equal to:`, options: ["$2a^{2}$", "$2a^{1/3}$", "$2a^{2/3}$", "$2a^{3}$"], correct: 2 },
-            { id: 4, section: "A", type: "mcq", text: String.raw`If $x=\sin\alpha,$ $y=\sin\beta$, $z=\sin(\alpha+\beta)$ then $\cos(\alpha+\beta)=$`, options: [String.raw`$\frac{x^{2}+y^{2}+z^{2}}{2xy}$`, String.raw`$\frac{x^{2}+y^{2}-z^{2}}{xy}$`, String.raw`$\frac{z^{2}-x^{2}-y^{2}}{2xy}$`, String.raw`$\frac{z^{2}-x^{2}-y^{2}}{xy}$`], correct: 2 },
-            { id: 5, section: "A", type: "mcq", text: String.raw`The expression $\frac{\cos 6x+6\cos 4x+15\cos 2x+10}{\cos 5x+5\cos 3x+10\cos x}$ is equal to:`, options: [String.raw`$\cos 2x$`, String.raw` $2\cos x$`, String.raw`$\cos^{2}x$`, String.raw` $1+\cos x$`], correct: 1 },
-            { id: 6, section: "A", type: "mcq", text: String.raw`$\cos(A+B)+\sin(A-B)=?$`, options: [String.raw`$(\cos A-\sin A)(\cos B+\sin B)$`, String.raw`$(\sin A-\cos A)(\cos B+\sin B)$`, String.raw`$(\cos A-\sin A)(\cos B-\cos B)$`, String.raw`$(\cos A+\sin A)(\cos B-\sin B)$`], correct: 3 },
-            { id: 7, section: "A", type: "mcq", text: String.raw`Let $\frac{\sin 3\theta}{\cos 2\theta}=p$ where $\theta\in\left(\frac{18\pi}{48},\frac{23\pi}{48}\right)$ and $\frac{\sin 3\beta}{\cos 2\beta}=q$ where $\beta\in\left(\frac{13\pi}{48},\frac{14\pi}{48}\right)$. Then:`, options: ["$p>0$ and $q>0$", "$p>0$ and $q<0$", "$p<0$ and $q<0$", "$p<0$ and $q>0$"], correct: 1 },
-            { id: 8, section: "A", type: "mcq", text: String.raw`Each of the four statements given below are either True or False.<br>I. $\sin 765^{\circ}=-1/\sqrt{2}$<br>II. $\csc(-1410^{\circ})=2$<br>III. $\tan(13\pi/3)=1/\sqrt{3}$<br>IV. $\cot(-15\pi/4)=-1$<br><br>Indicate the correct order of sequence, where 'T' stands for true and 'F' stands for false:`, options: ["FTFT", "FFTT", "TFFF", "FTFF"], correct: 3 },
-            { id: 9, section: "A", type: "mcq", text: String.raw`Find the smallest natural '$n$' such that $\tan(107n)^{\circ}=\frac{\cos 96^{\circ}+\sin 96^{\circ}}{\cos 96^{\circ}-\sin 96^{\circ}}$:`, options: ["$n=2$", "$n=3$", "$n=4$", "$n=5$"], correct: 1 },
-            { id: 10, section: "A", type: "mcq", text: String.raw`The value of $\frac{\sin\frac{\pi}{48}+\sin\frac{3\pi}{48}+\sin\frac{5\pi}{48}+\sin\frac{7\pi}{48}}{\cos\frac{\pi}{48}+\cos\frac{3\pi}{48}+\cos\frac{5\pi}{48}+\cos\frac{7\pi}{48}}$ is equal to:`, options: ["$2-\sqrt{3}$", "$2+\sqrt{3}$", "$\sqrt{2}-1$", "$\sqrt{2}+1$"], correct: 0 },
-            { id: 11, section: "A", type: "mcq", text: String.raw`Let $x=2^{(\log_{2}3)(\log_{3}4)\dots(\log_{99}100)}$, then the value of $\cos\left(\frac{x\pi}{4}\right)+\sin\left(\frac{x\pi}{4}\right)$ is equal to:`, options: ["1", String.raw`$\frac{1}{\sqrt{2}}$`, String.raw`$\sqrt{2}$`, "-1"], correct: 3 },
-            { id: 12, section: "A", type: "mcq", text: String.raw`Number of solution(s) of the equation $\log_{\sqrt{x}}(x+|x-3|)=\log_{x}(2x+5+2|x-3|)$ is:`, options: ["0", "1", "2", "Infinitely many"], correct: 1 },
-            { id: 13, section: "A", type: "mcq", text: String.raw`Given $\log_{10}2=0.3010$, $\log_{10}3=0.4771$. Using this information or otherwise, choose the correct statements:`, options: ["$8^{150}>9^{100}$", "$16^{75}>81^{50}$", "$\log_{2/3}3>0$", "None of these is correct"], correct: 0 },
-            { id: 14, section: "A", type: "mcq", text: String.raw`In the inequality below the value of the angle is expressed in radian measure. Which one of the inequalities below is true?`, options: ["$\sin 1 < \sin 2 < \sin 3$", "$\sin 3 < \sin 2 < \sin 1$", "$\sin 2 < \sin 1 < \sin 3$", "$\sin 3 < \sin 1 < \sin 2$"], correct: 3 },
-            { id: 15, section: "A", type: "mcq", text: String.raw`If $\theta$ is eliminated from the equations $x=a\cos(\theta-\alpha)$ and $y=b\cos(\theta-\beta)$, then $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}-\frac{2xy}{ab}\cos(\alpha-\beta)$ is equal to:`, options: [String.raw`$\sec^{2}(\alpha-\beta)$`, String.raw`$\csc^{2}(\alpha-\beta)$`, String.raw`$\cos^{2}(\alpha-\beta)$`, String.raw`$\sin^{2}(\alpha-\beta)$`], correct: 3 },
-            { id: 16, section: "A", type: "mcq", text: String.raw`The number of real values of $x$ satisfying the equation $3|x-2|+|1-5x|+4|3x+1|=13$ is:`, options: ["1", "4", "2", "3"], correct: 2 },
-            { id: 17, section: "A", type: "mcq", text: String.raw`The product of all values of $x$ satisfying the equation $|x-1|^{\log_{3}x^{2}-2\log_{x}9}=(x-1)^{7}$ is:`, options: ["162", String.raw`$\frac{162}{\sqrt{3}}$`, String.raw`$\frac{81}{\sqrt{3}}$`, "81"], correct: 0 },
-            { id: 18, section: "A", type: "mcq", text: String.raw`If $\tan\gamma=\sec\alpha\sec\beta+\tan\alpha\tan\beta$ then the greatest value of $\cos 2\gamma$ is:`, options: ["-1", String.raw`$\frac{1}{2}$`, String.raw`$-\frac{1}{2}$`, "0"], correct: 3 },
-            { id: 19, section: "A", type: "mcq", text: String.raw`The complete set of values of $x$ satisfying the inequality $\log_{3}\left(\frac{|x^{2}-4x|+3}{x^{2}+|x-5|}\right)\ge0$ is:`, options: [String.raw`$(-\infty,-\frac{2}{3}]\cup[\frac{1}{2},2]$`, String.raw`$(-\infty,-1]\cup[\frac{1}{2},2]$`, String.raw`$[\frac{1}{2},\frac{2}{3}]\cup[1,\infty)$`, String.raw`$[-\infty,-\frac{1}{2}]\cup[\frac{2}{3},2]$`], correct: 0 },
-            { id: 20, section: "A", type: "mcq", text: String.raw`Let $f(x)=\sqrt{1+x\sqrt{1+(x+1)\sqrt{1+(x+2)(x+4)}}}$ for $x>-1$ then the value of $\frac{f(\tan 22^{\circ})f(\tan 23^{\circ})}{\left|\left|\log_{\frac{1}{5}}12+\log_{\frac{1}{5}}3\right|-\left|\log_{\frac{1}{5}}20\right|\right|}$ is equal to:`, options: [String.raw`$\frac{1}{\log_{5}2}$`, String.raw`$\frac{1}{\log_{5}4}$`, "1", "2"], correct: 3 },
-            { id: 21, section: "B", type: "numeric", text: String.raw`If $\log_{10}\left(\frac{1025}{1024}\right)=a$ and $\log_{10}(2)=b$ then $\log_{10}(4100)=ma+nb$, where $m, n\in\mathbb{N}$. Find the value of $m+n$.`, correct: "13" },
-            { id: 22, section: "B", type: "numeric", text: String.raw`Find the sum of all integral values of $x$ satisfying the inequality: $2\log_{\frac{1}{4}}(x+5)>\frac{9}{4}log_{\frac{1}{3\sqrt{3}}}(9)+\log_{\sqrt{x+5}}(2)$`, correct: "-2" },
-            { id: 23, section: "B", type: "numeric", text: String.raw`Let $P(k)=\left(1+\cos\frac{\pi}{4k}\right)\left(1+\cos\frac{(2k-1)\pi}{4k}\right)\left(1+\cos\frac{(2k+1)\pi}{4k}\right)\left(1+\cos\frac{(4k-1)\pi}{4k}\right)$. If $P(5)+P(6)=\frac{7-\sqrt{a}-\sqrt{5}}{b}$ where $a, b\in\mathbb{N}$, find the value of $a+b$.`, correct: "44" },
-            { id: 24, section: "B", type: "numeric", text: String.raw`The value of $\frac{\sec 11^{\circ}\sec 19^{\circ}-2\cot 71^{\circ}}{\cot 79^{\circ}}$ is equal to:`, correct: "2" },
-            { id: 25, section: "B", type: "numeric", text: String.raw`The value of $\left(\frac{\tan\frac{\pi}{16}+\tan\frac{5\pi}{16}+\tan\frac{9\pi}{16}+\tan\frac{13\pi}{16}}{\sin\frac{\pi}{16}\cos\frac{\pi}{16}\left(\cos^{4}\frac{\pi}{16}-\sin^{4}\frac{\pi}{16}\right)}\right)^{2}$ is equal to:`, correct: "512" }
-        ];
+  {
+    id: 1,
+    section: "A",
+    type: "mcq",
+    text: String.raw`In a triangle $ABC$, if $A-B=120^{\circ}$ and $\sin\frac{A}{2}\sin\frac{B}{2}\sin\frac{C}{2}=\frac{1}{32}$, then $\cos C$ equals:`,
+    options: [
+      String.raw`$3/4$`,
+      String.raw`$2/3$`,
+      String.raw`$5/6$`,
+      String.raw`$7/8$`
+    ],
+    correct: 3
+  },
+  {
+    id: 2,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The value of the expression $\frac{1}{\cos 290^{\circ}}+\frac{1}{\sqrt{3}\sin 250^{\circ}}$ is:`,
+    options: [
+      String.raw`$\frac{\sqrt{3}}{4}$`,
+      String.raw`$\frac{4}{\sqrt{3}}$`,
+      String.raw`$\frac{2}{\sqrt{3}}$`,
+      String.raw`$\frac{\sqrt{3}}{2}$`
+    ],
+    correct: 1
+  },
+  {
+    id: 3,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $a \cos^{3}\alpha+3a \cos \alpha \sin^{2}\alpha=m$ and $a \sin^{3}\alpha+3a \cos^{2}\alpha \sin \alpha=n$, then $(m+n)^{2/3}+(m-n)^{2/3}$ is equal to:`,
+    options: [
+      String.raw`$2a^{2}$`,
+      String.raw`$2a^{1/3}$`,
+      String.raw`$2a^{2/3}$`,
+      String.raw`$2a^{3}$`
+    ],
+    correct: 2
+  },
+  {
+    id: 4,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $x=\sin \alpha$, $y=\sin \beta$, $z=\sin(\alpha+\beta)$, then $\cos(\alpha+\beta)=$`,
+    options: [
+      String.raw`$\frac{x^{2}+y^{2}+z^{2}}{2xy}$`,
+      String.raw`$\frac{x^{2}+y^{2}-z^{2}}{xy}$`,
+      String.raw`$\frac{z^{2}-x^{2}-y^{2}}{2xy}$`,
+      String.raw`$\frac{z^{2}-x^{2}-y^{2}}{xy}$`
+    ],
+    correct: 2
+  },
+  {
+    id: 5,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The expression $\frac{\cos 6x+6 \cos 4x+15 \cos 2x+10}{\cos 5x+5 \cos 3x+10 \cos x}$ is equal to:`,
+    options: [
+      String.raw`$\cos 2x$`,
+      String.raw`$2 \cos x$`,
+      String.raw`$\cos^{2}x$`,
+      String.raw`$1+\cos x$`
+    ],
+    correct: 1
+  },
+  {
+    id: 6,
+    section: "A",
+    type: "mcq",
+    text: String.raw`$\cos(A+B)+\sin(A-B) =$ ?`,
+    options: [
+      String.raw`$(\cos A-\sin A)(\cos B+\sin B)$`,
+      String.raw`$(\sin A-\cos A)(\cos B+\sin B)$`,
+      String.raw`$(\cos A-\sin A)(\cos B-\cos B)$`,
+      String.raw`$(\cos A+\sin A)(\cos B-\sin B)$`
+    ],
+    correct: 3
+  },
+  {
+    id: 7,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Let $\frac{\sin 3\theta}{\cos 2\theta}=p$ where $\theta\in\left(\frac{18\pi}{48},\frac{23\pi}{48}\right)$ and $\frac{\sin 3\beta}{\cos 2\beta}=q$ where $\beta\in\left(\frac{13\pi}{48},\frac{14\pi}{48}\right)$. Then:`,
+    options: [
+      String.raw`$p>0$ and $q>0$`,
+      String.raw`$p>0$ and $q<0$`,
+      String.raw`$p<0$ and $q<0$`,
+      String.raw`$p<0$ and $q>0$`
+    ],
+    correct: 1
+  },
+  {
+    id: 8,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Each of the four statements given below are either True or False.<br>I. $\sin 765^{\circ}=-1/\sqrt{2}$<br>II. $\csc(-1410^{\circ})=2$<br>III. $\tan\frac{13\pi}{3}=1/\sqrt{3}$<br>IV. $\cot\left(-\frac{15\pi}{4}\right)=-1$<br><br>Indicate the correct order of sequence, where 'T' stands for true and 'F' stands for false:`,
+    options: [
+      String.raw`FTFT`,
+      String.raw`FFTT`,
+      String.raw`TFFF`,
+      String.raw`FTFF`
+    ],
+    correct: 3
+  },
+  {
+    id: 9,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Find the smallest natural '$n$' such that $\tan(107n)^{\circ}=\frac{\cos 96^{\circ}+\sin 96^{\circ}}{\cos 96^{\circ}-\sin 96^{\circ}}$:`,
+    options: [
+      String.raw`$n=2$`,
+      String.raw`$n=3$`,
+      String.raw`$n=4$`,
+      String.raw`$n=5$`
+    ],
+    correct: 1
+  },
+  {
+    id: 10,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The value of $\frac{\sin\frac{\pi}{48}+\sin\frac{3\pi}{48}+\sin\frac{5\pi}{48}+\sin\frac{7\pi}{48}}{\cos\frac{\pi}{48}+\cos\frac{3\pi}{48}+\cos\frac{5\pi}{48}+\cos\frac{7\pi}{48}}$ is equal to:`,
+    options: [
+      String.raw`$2-\sqrt{3}$`,
+      String.raw`$2+\sqrt{3}$`,
+      String.raw`$\sqrt{2}-1$`,
+      String.raw`$\sqrt{2}+1$`
+    ],
+    correct: 0
+  },
+  {
+    id: 11,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Let $x=2^{(\log_{2}3)(\log_{3}4)\dots(\log_{99}100)}$, then the value of $\cos\left(\frac{x\pi}{4}\right)+\sin\left(\frac{x\pi}{4}\right)$ is equal to:`,
+    options: [
+      String.raw`1`,
+      String.raw`$\frac{1}{\sqrt{2}}$`,
+      String.raw`$\sqrt{2}$`,
+      String.raw`-1`
+    ],
+    correct: 3
+  },
+  {
+    id: 12,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Number of solution(s) of the equation $\log_{\sqrt{x}}(x+|x-3|)=\log_{x}(2x+5+2|x-3|)$ is:`,
+    options: [
+      String.raw`0`,
+      String.raw`1`,
+      String.raw`2`,
+      String.raw`Infinitely many`
+    ],
+    correct: 1
+  },
+  {
+    id: 13,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Given $\log_{10}2=0.3010$, $\log_{10}3=0.4771$. Using this information or otherwise, choose the correct statements:`,
+    options: [
+      String.raw`$8^{150}>9^{100}$`,
+      String.raw`$16^{75}>81^{50}$`,
+      String.raw`$\log_{2/3}3>0$`,
+      String.raw`None of these is correct`
+    ],
+    correct: 0
+  },
+  {
+    id: 14,
+    section: "A",
+    type: "mcq",
+    text: String.raw`In the inequality below the value of the angle is expressed in radian measure. Which one of the inequalities below is true?`,
+    options: [
+      String.raw`$\sin 1 < \sin 2 < \sin 3$`,
+      String.raw`$\sin 3 < \sin 2 < \sin 1$`,
+      String.raw`$\sin 2 < \sin 1 < \sin 3$`,
+      String.raw`$\sin 3 < \sin 1 < \sin 2$`
+    ],
+    correct: 3
+  },
+  {
+    id: 15,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $\theta$ is eliminated from the equations $x=a \cos(\theta-\alpha)$ and $y=b \cos(\theta-\beta)$, then $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}-\frac{2xy}{ab}\cos(\alpha-\beta)$ is equal to:`,
+    options: [
+      String.raw`$\sec^{2}(\alpha-\beta)$`,
+      String.raw`$\csc^{2}(\alpha-\beta)$`,
+      String.raw`$\cos^{2}(\alpha-\beta)$`,
+      String.raw`$\sin^{2}(\alpha-\beta)$`
+    ],
+    correct: 3
+  },
+  {
+    id: 16,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The number of real values of $x$ satisfying the equation $3|x-2|+|1-5x|+4|3x+1|=13$ is:`,
+    options: [
+      String.raw`1`,
+      String.raw`4`,
+      String.raw`2`,
+      String.raw`3`
+    ],
+    correct: 2
+  },
+  {
+    id: 17,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The product of all values of $x$ satisfying the equation $|x-1|^{\log_{3}x^{2}-2 \log_{x}9}=(x-1)^{7}$, is:`,
+    options: [
+      String.raw`162`,
+      String.raw`$\frac{162}{\sqrt{3}}$`,
+      String.raw`$\frac{81}{\sqrt{3}}$`,
+      String.raw`81`
+    ],
+    correct: 0
+  },
+  {
+    id: 18,
+    section: "A",
+    type: "mcq",
+    text: String.raw`If $\tan \gamma=\sec \alpha \sec \beta+\tan \alpha \tan \beta$, then the greatest value of $\cos 2\gamma$ is:`,
+    options: [
+      String.raw`-1`,
+      String.raw`$\frac{1}{2}$`,
+      String.raw`$-\frac{1}{2}$`,
+      String.raw`0`
+    ],
+    correct: 3
+  },
+  {
+    id: 19,
+    section: "A",
+    type: "mcq",
+    text: String.raw`The complete set of values of $x$ satisfying the inequality $\log_{3}\left(\frac{|x^{2}-4x|+3}{x^{2}+|x-5|}\right)\ge0$ is:`,
+    options: [
+      String.raw`$(-\infty,-\frac{2}{3}]\cup[\frac{1}{2},2]$`,
+      String.raw`$(-\infty,-1]\cup[\frac{1}{2},2]$`,
+      String.raw`$[\frac{1}{2},\frac{2}{3}]\cup[1,\infty)$`,
+      String.raw`$[-\infty,-\frac{1}{2}]\cup[\frac{2}{3},2]$`
+    ],
+    correct: 0
+  },
+  {
+    id: 20,
+    section: "A",
+    type: "mcq",
+    text: String.raw`Let $f(x)=\sqrt{1+x\sqrt{1+(x+1)\sqrt{1+(x+2)(x+4)}}}$ for $x>-1$, then the value of $\frac{f(\tan 22^{\circ})f(\tan 23^{\circ})}{\left| \left|\log_{\frac{1}{5}}12+\log_{\frac{1}{5}}3\right| - \left|\log_{\frac{1}{5}}20\right| \right|}$ is equal to:`,
+    options: [
+      String.raw`$\frac{1}{\log_{5}2}$`,
+      String.raw`$\frac{1}{\log_{5}4}$`,
+      String.raw`1`,
+      String.raw`2`
+    ],
+    correct: 3
+  },
+  {
+    id: 21,
+    section: "B",
+    type: "numeric",
+    text: String.raw`If $\log_{10}\left(\frac{1025}{1024}\right)=a$ and $\log_{10}(2)=b$, then $\log_{10}(4100)=ma+nb$, where $m, n \in \mathbb{N}$. Find the value of $m+n$.`,
+    correct: "13"
+  },
+  {
+    id: 22,
+    section: "B",
+    type: "numeric",
+    text: String.raw`Find the sum of all integral values of $x$ satisfying the inequality: $2 \log_{\frac{1}{4}}(x+5) > \frac{9}{4}\log_{\frac{1}{3\sqrt{3}}}(9) + \log_{\sqrt{x+5}}(2)$`,
+    correct: "-2"
+  },
+  {
+    id: 23,
+    section: "B",
+    type: "numeric",
+    text: String.raw`Let $P(k)=\left(1+\cos\frac{\pi}{4k}\right)\left(1+\cos\frac{(2k-1)\pi}{4k}\right)\left(1+\cos\frac{(2k+1)\pi}{4k}\right)\left(1+\cos\frac{(4k-1)\pi}{4k}\right)$. If $P(5)+P(6)=\frac{7-\sqrt{a}-\sqrt{5}}{b}$ where $a, b \in \mathbb{N}$, find the value of $a+b$.`,
+    correct: "44"
+  },
+  {
+    id: 24,
+    section: "B",
+    type: "numeric",
+    text: String.raw`The value of $\frac{\sec 11^{\circ} \sec 19^{\circ} - 2 \cot 71^{\circ}}{\cot 79^{\circ}}$ is equal to:`,
+    correct: "2"
+  },
+  {
+    id: 25,
+    section: "B",
+    type: "numeric",
+    text: String.raw`The value of $\left(\frac{\tan\frac{\pi}{16}+\tan\frac{5\pi}{16}+\tan\frac{9\pi}{16}+\tan\frac{13\pi}{16}}{\sin\frac{\pi}{16}\cos\frac{\pi}{16}\left(\cos^{4}\frac{\pi}{16}-\sin^{4}\frac{\pi}{16}\right)}\right)^{2}$ is equal to:`,
+    correct: "512"
+  }
+];
+
 
         let studentUsername = "", studentName = "", currentIdx = 0, userResponses = {};
         let timeRemaining = EXAM_DURATION_MINUTES * 60, timerInterval, testRunning = false, isLockedOut = false;
